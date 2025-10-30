@@ -1,7 +1,3 @@
-Here’s a refined and more engaging version of your prompt. It maintains the original structure but improves clarity, tone, and flow while emphasizing consistency and best practices:
-
----
-
 # 📝 Guidelines for Writing React.js Documentation
 
 ## 📘 Introduction Section
@@ -31,7 +27,7 @@ Consistency in formatting ensures readability across all documentation.
 
 ---
 
-## 🧩 Example Structure and Style
+## Example Structure and Style
 
 Examples should build progressively—from basic concepts to advanced implementations.  
 Avoid numbering section titles (e.g., "Example 1: Basic State"). Instead, use descriptive titles like:  
@@ -39,7 +35,9 @@ Avoid numbering section titles (e.g., "Example 1: Basic State"). Instead, use de
 
 Follow these conventions:
 
-- Use **React 19.2** features  
+- Use **React 19.2** features
+- Use local JSON data for simulating data or simple Express app when neeeded in more complex
+  examples when needed.
 - Generate and manage projects using **Bun.js**  
 - Apply **modern React patterns**: Functional Components, Hooks, ES6+ syntax  
 - Adhere to **React best practices**: proper dependency arrays, clear component naming, modular structure  
