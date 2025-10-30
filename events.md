@@ -541,7 +541,7 @@ function FocusManagementExample() {
   const passwordRef = useRef(null);
   const [step, setStep] = useState(1);
 
-  const handleUsernameKeyPress = (event) => {
+  const handleUsernameKeyDown = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       emailRef.current.focus();
@@ -549,7 +549,7 @@ function FocusManagementExample() {
     }
   };
 
-  const handleEmailKeyPress = (event) => {
+  const handleEmailKeyDown = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       passwordRef.current.focus();
@@ -570,7 +570,7 @@ function FocusManagementExample() {
         ref={usernameRef}
         type="text"
         placeholder="Username"
-        onKeyPress={handleUsernameKeyPress}
+        onKeyDown={handleUsernameKeyDown}
         autoFocus
       />
       
@@ -578,7 +578,7 @@ function FocusManagementExample() {
         ref={emailRef}
         type="email"
         placeholder="Email"
-        onKeyPress={handleEmailKeyPress}
+        onKeyDown={handleEmailKeyDown}
       />
       
       <input
