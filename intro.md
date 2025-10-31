@@ -1,6 +1,6 @@
-# Introduction to React.js and the Virtual DOM
+# Introduction to React and the Virtual DOM
 
-React.js is a powerful JavaScript library for building dynamic user  
+React is a powerful JavaScript library for building dynamic user  
 interfaces, particularly for single-page applications. Created by Facebook  
 (now Meta) in 2013, React revolutionized web development by introducing a  
 component-based architecture and the Virtual DOM concept.  
@@ -394,7 +394,7 @@ This pattern is fundamental for building data-driven React applications.
 
 ## Conclusion
 
-React.js has transformed modern web development by introducing a component-  
+React has transformed modern web development by introducing a component-  
 based architecture centered around the Virtual DOM. Its declarative approach,  
 powerful abstractions, and rich ecosystem make it an excellent choice for  
 building everything from simple interactive widgets to complex enterprise  
