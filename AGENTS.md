@@ -36,6 +36,7 @@ Avoid numbering section titles (e.g., "Example 1: Basic State"). Instead, use de
 Follow these conventions:
 
 - Use **React 19.2** features
+- Write code examples in TypeScript
 - Use local JSON data for simulating data or simple Express app when neeeded in more complex
   examples when needed.
 - Generate and manage projects using **Bun.js**  
