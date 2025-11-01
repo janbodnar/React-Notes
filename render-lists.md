@@ -364,7 +364,7 @@ Lists can contain other lists, creating hierarchical structures like menus
 or category trees.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type Item = {
   id: number;
@@ -384,19 +384,19 @@ function CategoryList(): JSX.Element {
       name: "Electronics",
       items: [
         { id: 101, name: "Laptops" },
-        { id: 102, name: "Phones" }
-      ]
+        { id: 102, name: "Phones" },
+      ],
     },
     {
       id: 2,
       name: "Books",
       items: [
         { id: 201, name: "Fiction" },
-        { id: 202, name: "Non-fiction" }
-      ]
-    }
+        { id: 202, name: "Non-fiction" },
+      ],
+    },
   ];
-  
+
   return (
     <div>
       {categories.map((category) => (
