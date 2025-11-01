@@ -29,12 +29,18 @@ state enables interactivity and dynamic behavior.
 The most basic use of props involves passing primitive values like strings,  
 numbers, or booleans from a parent component to a child component.
 
-```jsx
-function Greeting({ name }) {
+```tsx
+import React from 'react';
+
+type GreetingProps = {
+  name: string;
+};
+
+function Greeting({ name }: GreetingProps): JSX.Element {
   return <h1>Hello there, {name}!</h1>;
 }
 
-function App() {
+function App(): JSX.Element {
   return <Greeting name="Alice" />;
 }
 
@@ -52,8 +58,16 @@ for cleaner code. When rendered, it displays "Hello there, Alice!".
 Components can receive multiple props of different types to build more  
 complex interfaces.
 
-```jsx
-function UserCard({ name, age, email }) {
+```tsx
+import React from 'react';
+
+type UserCardProps = {
+  name: string;
+  age: number;
+  email: string;
+};
+
+function UserCard({ name, age, email }: UserCardProps): JSX.Element {
   return (
     <div className="user-card">
       <h2>{name}</h2>
@@ -63,7 +77,7 @@ function UserCard({ name, age, email }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <UserCard 
       name="Bob Smith" 
@@ -87,8 +101,20 @@ expression rather than a string.
 You can pass entire objects as props to send complex data structures to  
 child components.
 
-```jsx
-function ProductCard({ product }) {
+```tsx
+import React from 'react';
+
+type Product = {
+  name: string;
+  price: number;
+  category: string;
+};
+
+type ProductCardProps = {
+  product: Product;
+};
+
+function ProductCard({ product }: ProductCardProps): JSX.Element {
   return (
     <div className="product">
       <h3>{product.name}</h3>
@@ -98,8 +124,8 @@ function ProductCard({ product }) {
   );
 }
 
-function App() {
-  const product = {
+function App(): JSX.Element {
+  const product: Product = {
     name: "Laptop",
     price: 999,
     category: "Electronics"
@@ -120,8 +146,14 @@ together. The child component accesses object properties using dot notation.
 
 Arrays can be passed as props and mapped to create lists of elements.
 
-```jsx
-function TodoList({ tasks }) {
+```tsx
+import React from 'react';
+
+type TodoListProps = {
+  tasks: string[];
+};
+
+function TodoList({ tasks }: TodoListProps): JSX.Element {
   return (
     <ul>
       {tasks.map((task, index) => (
@@ -131,8 +163,8 @@ function TodoList({ tasks }) {
   );
 }
 
-function App() {
-  const myTasks = ["Learn React", "Build a project", "Deploy app"];
+function App(): JSX.Element {
+  const myTasks: string[] = ["Learn React", "Build a project", "Deploy app"];
 
   return <TodoList tasks={myTasks} />;
 }
@@ -150,8 +182,15 @@ typically use unique IDs.
 
 Boolean props are commonly used to conditionally render or style components.
 
-```jsx
-function Alert({ message, isError }) {
+```tsx
+import React from 'react';
+
+type AlertProps = {
+  message: string;
+  isError: boolean;
+};
+
+function Alert({ message, isError }: AlertProps): JSX.Element {
   const className = isError ? "alert-error" : "alert-success";
   
   return (
@@ -161,7 +200,7 @@ function Alert({ message, isError }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <Alert message="Operation successful!" isError={false} />
@@ -185,8 +224,15 @@ prop to determine which CSS class to apply, creating different visual styles.
 You can provide default values for props using JavaScript's default  
 parameter syntax in destructuring.
 
-```jsx
-function Button({ text = "Click me", variant = "primary" }) {
+```tsx
+import React from 'react';
+
+type ButtonProps = {
+  text?: string;
+  variant?: 'primary' | 'secondary' | 'success';
+};
+
+function Button({ text = "Click me", variant = "primary" }: ButtonProps): JSX.Element {
   return (
     <button className={`btn btn-${variant}`}>
       {text}
@@ -194,7 +240,7 @@ function Button({ text = "Click me", variant = "primary" }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <Button />
@@ -217,8 +263,14 @@ them.
 The rest operator allows you to extract specific props while passing  
 remaining props to child elements.
 
-```jsx
-function Input({ label, ...inputProps }) {
+```tsx
+import React, { InputHTMLAttributes } from 'react';
+
+type InputProps = {
+  label: string;
+} & InputHTMLAttributes<HTMLInputElement>;
+
+function Input({ label, ...inputProps }: InputProps): JSX.Element {
   return (
     <div className="form-group">
       <label>{label}</label>
@@ -227,7 +279,7 @@ function Input({ label, ...inputProps }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <Input 
       label="Username" 
@@ -252,8 +304,16 @@ to the input element.
 Props can be functions, enabling child components to communicate back to  
 parent components.
 
-```jsx
-function Counter({ count, onIncrement, onDecrement }) {
+```tsx
+import React from 'react';
+
+type CounterProps = {
+  count: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+};
+
+function Counter({ count, onIncrement, onDecrement }: CounterProps): JSX.Element {
   return (
     <div>
       <p>Count: {count}</p>
@@ -263,7 +323,7 @@ function Counter({ count, onIncrement, onDecrement }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   const handleIncrement = () => console.log("Increment!");
   const handleDecrement = () => console.log("Decrement!");
 
@@ -290,8 +350,15 @@ interactions.
 The special `children` prop contains any content placed between component  
 opening and closing tags.
 
-```jsx
-function Card({ children, title }) {
+```tsx
+import React, { ReactNode } from 'react';
+
+type CardProps = {
+  children: ReactNode;
+  title: string;
+};
+
+function Card({ children, title }: CardProps): JSX.Element {
   return (
     <div className="card">
       <h2>{title}</h2>
@@ -302,7 +369,7 @@ function Card({ children, title }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <Card title="Welcome">
       <p>This is card content.</p>
@@ -324,15 +391,22 @@ composition.
 
 Props can control what content is rendered within a component.
 
-```jsx
-function UserStatus({ isLoggedIn, username }) {
+```tsx
+import React from 'react';
+
+type UserStatusProps = {
+  isLoggedIn: boolean;
+  username?: string;
+};
+
+function UserStatus({ isLoggedIn, username }: UserStatusProps): JSX.Element {
   if (isLoggedIn) {
     return <p>Welcome back, {username}!</p>;
   }
   return <p>Please log in to continue.</p>;
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <UserStatus isLoggedIn={true} username="Alice" />
@@ -357,10 +431,16 @@ building dynamic UIs.
 PropTypes help catch bugs by validating the types of props a component  
 receives.
 
-```jsx
-import PropTypes from 'prop-types';
+```tsx
+import React from 'react';
 
-function Article({ title, content, publishDate }) {
+type ArticleProps = {
+  title: string;
+  content: string;
+  publishDate: Date;
+};
+
+function Article({ title, content, publishDate }: ArticleProps): JSX.Element {
   return (
     <article>
       <h1>{title}</h1>
@@ -369,12 +449,6 @@ function Article({ title, content, publishDate }) {
     </article>
   );
 }
-
-Article.propTypes = {
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
-  publishDate: PropTypes.instanceOf(Date).isRequired
-};
 
 export default Article;
 ```
@@ -389,8 +463,17 @@ to install the `prop-types` package.
 
 The spread operator can pass all object properties as individual props.
 
-```jsx
-function Profile({ name, age, city, occupation }) {
+```tsx
+import React from 'react';
+
+type ProfileProps = {
+  name: string;
+  age: number;
+  city: string;
+  occupation: string;
+};
+
+function Profile({ name, age, city, occupation }: ProfileProps): JSX.Element {
   return (
     <div>
       <h2>{name}</h2>
@@ -401,8 +484,8 @@ function Profile({ name, age, city, occupation }) {
   );
 }
 
-function App() {
-  const user = {
+function App(): JSX.Element {
+  const user: ProfileProps = {
     name: "Charlie",
     age: 32,
     city: "Boston",
@@ -425,20 +508,27 @@ component's props. This reduces repetition and makes code more maintainable.
 A render prop is a function prop that a component uses to determine what  
 to render.
 
-```jsx
-function DataProvider({ data, render }) {
+```tsx
+import React, { ReactNode } from 'react';
+
+type DataProviderProps<T> = {
+  data: T[];
+  render: (data: T[]) => ReactNode;
+};
+
+function DataProvider<T>({ data, render }: DataProviderProps<T>): JSX.Element {
   return <div>{render(data)}</div>;
 }
 
-function App() {
-  const users = ["Alice", "Bob", "Charlie"];
+function App(): JSX.Element {
+  const users: string[] = ["Alice", "Bob", "Charlie"];
 
   return (
-    <DataProvider 
+    <DataProvider
       data={users}
-      render={(users) => (
+      render={(data) => (
         <ul>
-          {users.map((user, i) => <li key={i}>{user}</li>)}
+          {data.map((user, i) => <li key={i}>{user}</li>)}
         </ul>
       )}
     />
@@ -458,8 +548,16 @@ child component provides the data.
 
 Components can be passed as props to create flexible, composable layouts.
 
-```jsx
-function Layout({ header, sidebar, content }) {
+```tsx
+import React, { ReactNode } from 'react';
+
+type LayoutProps = {
+  header: ReactNode;
+  sidebar: ReactNode;
+  content: ReactNode;
+};
+
+function Layout({ header, sidebar, content }: LayoutProps): JSX.Element {
   return (
     <div className="layout">
       <header>{header}</header>
@@ -469,7 +567,7 @@ function Layout({ header, sidebar, content }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <Layout
       header={<h1>My App</h1>}
@@ -493,10 +591,14 @@ structure.
 Sometimes you need to pass refs through component boundaries, which  
 requires `forwardRef`.
 
-```jsx
-import { forwardRef } from 'react';
+```tsx
+import React, { forwardRef, useRef } from 'react';
 
-const CustomInput = forwardRef(({ label, ...props }, ref) => {
+type CustomInputProps = {
+  label: string;
+};
+
+const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(({ label, ...props }, ref) => {
   return (
     <div>
       <label>{label}</label>
@@ -505,10 +607,10 @@ const CustomInput = forwardRef(({ label, ...props }, ref) => {
   );
 });
 
-function App() {
-  const inputRef = React.useRef(null);
+function App(): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const focusInput = () => {
+  const focusInput = (): void => {
     inputRef.current?.focus();
   };
 
@@ -535,11 +637,11 @@ elements.
 
 The `useState` Hook manages component state in functional components.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function Counter() {
-  const [count, setCount] = useState(0);
+function Counter(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
 
   return (
     <div>
@@ -564,11 +666,11 @@ value.
 Boolean state is perfect for toggling between two states like show/hide or  
 on/off.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ToggleVisibility() {
-  const [isVisible, setIsVisible] = useState(false);
+function ToggleVisibility(): JSX.Element {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   return (
     <div>
@@ -593,13 +695,13 @@ The content is conditionally rendered using the `&&` operator.
 State is commonly used to control form inputs, making them "controlled  
 components".
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function NameForm() {
-  const [name, setName] = useState('');
+function NameForm(): JSX.Element {
+  const [name, setName] = useState<string>('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     alert(`Submitted name: ${name}`);
   };
@@ -609,7 +711,7 @@ function NameForm() {
       <input 
         type="text"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
         placeholder="Enter your name"
       />
       <button type="submit">Submit</button>
@@ -631,30 +733,30 @@ the state.
 Components can use multiple `useState` calls to manage different pieces of  
 state independently.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function RegistrationForm() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [age, setAge] = useState(0);
+function RegistrationForm(): JSX.Element {
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [age, setAge] = useState<number>(0);
 
   return (
     <div>
       <input 
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
         placeholder="Username"
       />
       <input 
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
         placeholder="Email"
       />
       <input 
         type="number"
         value={age}
-        onChange={(e) => setAge(Number(e.target.value))}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setAge(Number(e.target.value))}
         placeholder="Age"
       />
       <p>Username: {username}, Email: {email}, Age: {age}</p>
@@ -675,13 +777,13 @@ simpler and more explicit. Each field has its own setter function.
 When new state depends on previous state, use the functional update form  
 to ensure correctness.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function AsyncCounter() {
-  const [count, setCount] = useState(0);
+function AsyncCounter(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
 
-  const incrementTwice = () => {
+  const incrementTwice = (): void => {
     setCount(prevCount => prevCount + 1);
     setCount(prevCount => prevCount + 1);
   };
@@ -710,17 +812,23 @@ updates occur.
 State can hold objects, but you must create new objects when updating to  
 trigger re-renders.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function UserProfile() {
-  const [user, setUser] = useState({
+type User = {
+  name: string;
+  age: number;
+  city: string;
+};
+
+function UserProfile(): JSX.Element {
+  const [user, setUser] = useState<User>({
     name: 'Alice',
     age: 25,
     city: 'New York'
   });
 
-  const updateCity = () => {
+  const updateCity = (): void => {
     setUser(prevUser => ({
       ...prevUser,
       city: 'San Francisco'
@@ -749,14 +857,14 @@ immutability.
 Arrays in state should be updated immutably using methods like spread or  
 concat rather than push.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function TodoApp() {
-  const [todos, setTodos] = useState(['Learn React', 'Build app']);
-  const [input, setInput] = useState('');
+function TodoApp(): JSX.Element {
+  const [todos, setTodos] = useState<string[]>(['Learn React', 'Build app']);
+  const [input, setInput] = useState<string>('');
 
-  const addTodo = () => {
+  const addTodo = (): void => {
     if (input.trim()) {
       setTodos([...todos, input]);
       setInput('');
@@ -770,7 +878,7 @@ function TodoApp() {
       </ul>
       <input 
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
       />
       <button onClick={addTodo}>Add</button>
     </div>
@@ -791,17 +899,22 @@ detects the change.
 Filter creates a new array without the removed item, maintaining  
 immutability.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function TaskList() {
-  const [tasks, setTasks] = useState([
+type Task = {
+  id: number;
+  text: string;
+};
+
+function TaskList(): JSX.Element {
+  const [tasks, setTasks] = useState<Task[]>([
     { id: 1, text: 'Task 1' },
     { id: 2, text: 'Task 2' },
     { id: 3, text: 'Task 3' }
   ]);
 
-  const removeTask = (id) => {
+  const removeTask = (id: number): void => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
@@ -830,16 +943,22 @@ arrays.
 
 Map creates a new array with specific items updated based on a condition.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ShoppingList() {
-  const [items, setItems] = useState([
+type Item = {
+  id: number;
+  name: string;
+  bought: boolean;
+};
+
+function ShoppingList(): JSX.Element {
+  const [items, setItems] = useState<Item[]>([
     { id: 1, name: 'Apples', bought: false },
     { id: 2, name: 'Bread', bought: false }
   ]);
 
-  const toggleBought = (id) => {
+  const toggleBought = (id: number): void => {
     setItems(items.map(item => 
       item.id === id ? { ...item, bought: !item.bought } : item
     ));
@@ -874,14 +993,13 @@ with new object references, while other items remain unchanged.
 Sometimes you can calculate values from existing state instead of storing  
 them separately.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function PriceCalculator() {
-  const [price, setPrice] = useState(100);
-  const [quantity, setQuantity] = useState(1);
+function PriceCalculator(): JSX.Element {
+  const [price, setPrice] = useState<number>(100);
+  const [quantity, setQuantity] = useState<number>(1);
   
-  // Derived value, not stored in state
   const total = price * quantity;
   const tax = total * 0.1;
   const finalPrice = total + tax;
@@ -891,12 +1009,12 @@ function PriceCalculator() {
       <input 
         type="number"
         value={price}
-        onChange={(e) => setPrice(Number(e.target.value))}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setPrice(Number(e.target.value))}
       />
       <input 
         type="number"
         value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setQuantity(Number(e.target.value))}
       />
       <p>Total: ${finalPrice.toFixed(2)}</p>
     </div>
@@ -918,10 +1036,15 @@ in state.
 
 Parents can control child component state through props and callbacks.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function SearchBox({ value, onChange }) {
+type SearchBoxProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+function SearchBox({ value, onChange }: SearchBoxProps): JSX.Element {
   return (
     <input 
       type="text"
@@ -932,8 +1055,8 @@ function SearchBox({ value, onChange }) {
   );
 }
 
-function App() {
-  const [searchTerm, setSearchTerm] = useState('');
+function App(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   return (
     <div>
@@ -956,24 +1079,30 @@ the UI. This pattern enables sharing state between multiple components.
 When multiple components need to share state, lift it up to their common  
 parent.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function TemperatureInput({ scale, temperature, onChange }) {
+type TemperatureInputProps = {
+  scale: 'Celsius' | 'Fahrenheit';
+  temperature: string;
+  onChange: (value: string) => void;
+};
+
+function TemperatureInput({ scale, temperature, onChange }: TemperatureInputProps): JSX.Element {
   return (
     <div>
       <label>Enter temperature in {scale}:</label>
       <input 
         value={temperature}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
       />
     </div>
   );
 }
 
-function App() {
-  const [celsius, setCelsius] = useState('');
-  const fahrenheit = celsius ? (celsius * 9/5 + 32).toFixed(1) : '';
+function App(): JSX.Element {
+  const [celsius, setCelsius] = useState<string>('');
+  const fahrenheit = celsius ? (parseFloat(celsius) * 9/5 + 32).toFixed(1) : '';
 
   return (
     <div>
@@ -1000,18 +1129,22 @@ the single source of truth and passes data down via props.
 Props can provide initial state values, but the component manages the  
 state thereafter.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function EditableTitle({ initialTitle }) {
-  const [title, setTitle] = useState(initialTitle);
-  const [isEditing, setIsEditing] = useState(false);
+type EditableTitleProps = {
+  initialTitle: string;
+};
+
+function EditableTitle({ initialTitle }: EditableTitleProps): JSX.Element {
+  const [title, setTitle] = useState<string>(initialTitle);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   if (isEditing) {
     return (
       <input 
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
         onBlur={() => setIsEditing(false)}
         autoFocus
       />
@@ -1025,7 +1158,7 @@ function EditableTitle({ initialTitle }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return <EditableTitle initialTitle="Click to edit" />;
 }
 
@@ -1043,11 +1176,15 @@ subsequent changes.
 Child components can call parent functions to trigger state changes in the  
 parent.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ColorPicker({ onColorChange }) {
-  const colors = ['red', 'blue', 'green', 'yellow'];
+type ColorPickerProps = {
+  onColorChange: (color: string) => void;
+};
+
+function ColorPicker({ onColorChange }: ColorPickerProps): JSX.Element {
+  const colors: string[] = ['red', 'blue', 'green', 'yellow'];
 
   return (
     <div>
@@ -1064,8 +1201,8 @@ function ColorPicker({ onColorChange }) {
   );
 }
 
-function App() {
-  const [selectedColor, setSelectedColor] = useState('red');
+function App(): JSX.Element {
+  const [selectedColor, setSelectedColor] = useState<string>('red');
 
   return (
     <div>
@@ -1092,10 +1229,16 @@ function with data, and the parent updates its state accordingly.
 When props need to pass through many levels, consider component composition  
 or Context API.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, Dispatch, SetStateAction } from 'react';
 
-function Display({ theme }) {
+type Theme = 'light' | 'dark';
+
+type DisplayProps = {
+  theme: Theme;
+};
+
+function Display({ theme }: DisplayProps): JSX.Element {
   return (
     <div style={{ 
       backgroundColor: theme === 'dark' ? '#333' : '#fff',
@@ -1107,7 +1250,12 @@ function Display({ theme }) {
   );
 }
 
-function Panel({ theme, onThemeChange }) {
+type PanelProps = {
+  theme: Theme;
+  onThemeChange: Dispatch<SetStateAction<Theme>>;
+};
+
+function Panel({ theme, onThemeChange }: PanelProps): JSX.Element {
   return (
     <div>
       <button onClick={() => onThemeChange('dark')}>Dark</button>
@@ -1117,8 +1265,8 @@ function Panel({ theme, onThemeChange }) {
   );
 }
 
-function App() {
-  const [theme, setTheme] = useState('light');
+function App(): JSX.Element {
+  const [theme, setTheme] = useState<Theme>('light');
 
   return <Panel theme={theme} onThemeChange={setTheme} />;
 }
@@ -1136,15 +1284,24 @@ Display. For deeper nesting, Context API would be more appropriate.
 Complex forms combine multiple state variables and props for validation  
 and submission.
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function LoginForm({ onSubmit }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+type Credentials = {
+  email: string;
+  password: string;
+};
 
-  const handleSubmit = (e) => {
+type LoginFormProps = {
+  onSubmit: (credentials: Credentials) => void;
+};
+
+function LoginForm({ onSubmit }: LoginFormProps): JSX.Element {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -1162,13 +1319,13 @@ function LoginForm({ onSubmit }) {
       <input 
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
         placeholder="Email"
       />
       <input 
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         placeholder="Password"
       />
       <button type="submit">Login</button>
@@ -1176,8 +1333,8 @@ function LoginForm({ onSubmit }) {
   );
 }
 
-function App() {
-  const handleLogin = (credentials) => {
+function App(): JSX.Element {
+  const handleLogin = (credentials: Credentials): void => {
     console.log('Login attempt:', credentials);
   };
 

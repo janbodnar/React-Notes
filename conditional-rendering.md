@@ -24,11 +24,11 @@ The logical AND (`&&`) operator provides a concise way to conditionally
 render elements. If the condition before `&&` is true, the element after  
 it will be rendered. If the condition is false, React ignores and skips it.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function NotificationBanner() {
-  const [hasNotification, setHasNotification] = useState(true);
+function NotificationBanner(): JSX.Element {
+  const [hasNotification, setHasNotification] = useState<boolean>(true);
 
   return (
     <div>
@@ -61,11 +61,11 @@ The ternary operator (`condition ? trueValue : falseValue`) allows you to
 choose between two different rendering outcomes. This is useful when you  
 need to render one thing or another, rather than something or nothing.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function LoginStatus() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function LoginStatus(): JSX.Element {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   return (
     <div>
@@ -97,18 +97,18 @@ You can combine multiple conditional rendering techniques to handle more
 complex scenarios. This example shows how to use both `&&` and ternary  
 operators together for sophisticated UI logic.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ShoppingCart() {
-  const [items, setItems] = useState([]);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+function ShoppingCart(): JSX.Element {
+  const [items, setItems] = useState<string[]>([]);
+  const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
 
-  const addItem = () => {
+  const addItem = (): void => {
     setItems([...items, `Item ${items.length + 1}`]);
   };
 
-  const clearCart = () => {
+  const clearCart = (): void => {
     setItems([]);
     setIsCheckingOut(false);
   };
@@ -176,18 +176,26 @@ When working with lists, you can use conditional rendering to handle empty
 states, loading states, or filter results. This example demonstrates  
 rendering different UI based on array content.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function TaskList() {
-  const [tasks, setTasks] = useState([
+type Task = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
+
+type Filter = 'all' | 'active' | 'completed';
+
+function TaskList(): JSX.Element {
+  const [tasks, setTasks] = useState<Task[]>([
     { id: 1, text: 'Review pull requests', completed: false },
     { id: 2, text: 'Write documentation', completed: true },
     { id: 3, text: 'Fix bug #123', completed: false }
   ]);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState<Filter>('all');
 
-  const toggleTask = (id) => {
+  const toggleTask = (id: number): void => {
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
@@ -258,14 +266,16 @@ responds to both user interactions and data states.
 Conditional rendering isn't limited to showing or hiding elements. You can  
 also conditionally apply styles, classes, or attributes based on state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, CSSProperties, ChangeEvent } from 'react';
 
-function ThemeToggle() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [fontSize, setFontSize] = useState('medium');
+type FontSize = 'small' | 'medium' | 'large';
 
-  const containerStyle = {
+function ThemeToggle(): JSX.Element {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [fontSize, setFontSize] = useState<FontSize>('medium');
+
+  const containerStyle: CSSProperties = {
     padding: '30px',
     backgroundColor: isDarkMode ? '#1e1e1e' : '#ffffff',
     color: isDarkMode ? '#ffffff' : '#000000',
@@ -273,7 +283,7 @@ function ThemeToggle() {
     transition: 'all 0.3s ease'
   };
 
-  const textSizeMap = {
+  const textSizeMap: Record<FontSize, string> = {
     small: '14px',
     medium: '16px',
     large: '20px'
@@ -306,7 +316,7 @@ function ThemeToggle() {
         
         <select 
           value={fontSize} 
-          onChange={(e) => setFontSize(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => setFontSize(e.target.value as FontSize)}
           style={{
             padding: '10px',
             backgroundColor: isDarkMode ? '#333' : '#f5f5f5',
@@ -370,12 +380,12 @@ than extensive inline conditionals.
 
 ## Common Pitfalls to Avoid
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function CommonMistakes() {
-  const [count, setCount] = useState(0);
-  const [items, setItems] = useState([]);
+function CommonMistakes(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
+  const [items, setItems] = useState<string[]>([]);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -419,7 +429,7 @@ function CommonMistakes() {
   );
 }
 
-function getStatusMessage(length) {
+function getStatusMessage(length: number): string {
   if (length === 0) return 'No items';
   if (length === 1) return 'One item';
   return 'Multiple items';

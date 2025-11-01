@@ -35,11 +35,11 @@ The `useEffect` Hook accepts two parameters: a function containing the side
 effect logic, and an optional dependency array that controls when the effect  
 runs.  
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function BasicEffect() {
-  const [count, setCount] = useState(0);
+function BasicEffect(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     document.title = `Count: ${count}`;
@@ -69,25 +69,33 @@ Data fetching is one of the most common use cases for `useEffect`. When
 fetching data from an API, you typically want to make the request after the  
 component mounts.  
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function UserList() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+function UserList(): JSX.Element {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsers = async (): Promise<void> => {
       try {
         const response = await fetch('https://jsonplaceholder.typicode.com/users');
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
-        const data = await response.json();
+        const data: User[] = await response.json();
         setUsers(data);
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -129,13 +137,18 @@ better user experience by catching and displaying network issues.
 Sometimes you need to refetch data when certain values change, such as  
 search queries or filter parameters.  
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState, ChangeEvent } from 'react';
 
-function UserSearch() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+type User = {
+  id: number;
+  name: string;
+};
+
+function UserSearch(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!searchTerm) {
@@ -143,13 +156,13 @@ function UserSearch() {
       return;
     }
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (): Promise<void> => {
       setLoading(true);
       try {
         const response = await fetch(
           `https://jsonplaceholder.typicode.com/users?name_like=${searchTerm}`
         );
-        const data = await response.json();
+        const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -168,7 +181,7 @@ function UserSearch() {
         type="text"
         placeholder="Search users..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
       />
       {loading && <div>Searching...</div>}
       <ul>
@@ -195,15 +208,15 @@ types again before the delay completes, implementing a debounce pattern.
 Event listeners are a common subscription pattern that requires proper  
 cleanup to prevent memory leaks.  
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function WindowResize() {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+function WindowResize(): JSX.Element {
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
 
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = (): void => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
@@ -239,15 +252,19 @@ only once.
 Timers like `setInterval` and `setTimeout` need careful cleanup to avoid  
 unexpected behavior and memory issues.  
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function CountdownTimer({ initialSeconds = 60 }) {
-  const [seconds, setSeconds] = useState(initialSeconds);
-  const [isActive, setIsActive] = useState(false);
+type CountdownTimerProps = {
+  initialSeconds?: number;
+};
+
+function CountdownTimer({ initialSeconds = 60 }: CountdownTimerProps): JSX.Element {
+  const [seconds, setSeconds] = useState<number>(initialSeconds);
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   useEffect(() => {
-    let intervalId = null;
+    let intervalId: NodeJS.Timeout | null = null;
 
     if (isActive && seconds > 0) {
       intervalId = setInterval(() => {
@@ -262,8 +279,8 @@ function CountdownTimer({ initialSeconds = 60 }) {
     };
   }, [isActive, seconds]);
 
-  const toggle = () => setIsActive(!isActive);
-  const reset = () => {
+  const toggle = (): void => setIsActive(!isActive);
+  const reset = (): void => {
     setSeconds(initialSeconds);
     setIsActive(false);
   };
@@ -295,12 +312,12 @@ if the component re-renders frequently.
 While React's declarative approach handles most DOM updates, sometimes you  
 need direct DOM access for third-party libraries or specific requirements.  
 
-```javascript
-import { useEffect, useRef, useState } from 'react';
+```tsx
+import React, { useEffect, useRef, useState, ChangeEvent } from 'react';
 
-function FocusInput() {
-  const inputRef = useRef(null);
-  const [value, setValue] = useState('');
+function FocusInput(): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState<string>('');
 
   useEffect(() => {
     if (inputRef.current) {
@@ -315,7 +332,7 @@ function FocusInput() {
         ref={inputRef}
         type="text"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
         placeholder="This input is automatically focused"
       />
     </div>
@@ -337,17 +354,18 @@ element is rendered.
 For more complex DOM manipulation like working with canvas or integrating  
 third-party visualization libraries:  
 
-```javascript
-import { useEffect, useRef } from 'react';
+```tsx
+import React, { useEffect, useRef } from 'react';
 
-function CanvasDrawing() {
-  const canvasRef = useRef(null);
+function CanvasDrawing(): JSX.Element {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     
     ctx.fillStyle = '#4A90E2';
     ctx.fillRect(10, 10, 150, 100);
@@ -393,7 +411,7 @@ re-run based on value changes.
 
 ### Empty Dependency Array
 
-```javascript
+```ts
 useEffect(() => {
   console.log('Runs once after initial render');
 }, []);
@@ -404,7 +422,7 @@ mounts, similar to `componentDidMount` in class components.
 
 ### With Dependencies
 
-```javascript
+```ts
 useEffect(() => {
   console.log('Runs when count changes');
 }, [count]);
@@ -415,7 +433,7 @@ variables change. React performs a shallow comparison to detect changes.
 
 ### No Dependency Array
 
-```javascript
+```ts
 useEffect(() => {
   console.log('Runs after every render');
 });
@@ -427,13 +445,13 @@ carefully.
 
 ### Multiple Dependencies
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState, ChangeEvent } from 'react';
 
-function MultiDependencyExample() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [fullName, setFullName] = useState('');
+function MultiDependencyExample(): JSX.Element {
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [fullName, setFullName] = useState<string>('');
 
   useEffect(() => {
     setFullName(`${firstName} ${lastName}`.trim());
@@ -445,13 +463,13 @@ function MultiDependencyExample() {
         type="text"
         placeholder="First name"
         value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
       />
       <input
         type="text"
         placeholder="Last name"
         value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
       />
       <p>Full name: {fullName}</p>
     </div>
@@ -472,11 +490,11 @@ regardless of which input changes.
 
 ### Stale Closures
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function StaleClosureExample() {
-  const [count, setCount] = useState(0);
+function StaleClosureExample(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -503,7 +521,7 @@ current value.
 React's ESLint plugin warns about missing dependencies. Always include all  
 values from the component scope that the effect uses to avoid bugs.  
 
-```javascript
+```ts
 // ❌ Bad: Missing dependency
 useEffect(() => {
   console.log(count);
@@ -525,7 +543,7 @@ unmount or before effects re-run.
 
 ### Basic Cleanup Pattern
 
-```javascript
+```ts
 useEffect(() => {
   // Setup code
   const subscription = subscribeToData();
@@ -542,23 +560,33 @@ unmounts and before the effect re-runs if dependencies change.
 
 ### Cleanup with Async Operations
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function DataFetchWithCleanup({ userId }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+type DataFetchWithCleanupProps = {
+  userId: number;
+};
+
+function DataFetchWithCleanup({ userId }: DataFetchWithCleanupProps): JSX.Element {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let isCancelled = false;
 
-    const fetchUser = async () => {
+    const fetchUser = async (): Promise<void> => {
       setLoading(true);
       try {
         const response = await fetch(
           `https://jsonplaceholder.typicode.com/users/${userId}`
         );
-        const data = await response.json();
+        const data: User = await response.json();
         
         if (!isCancelled) {
           setUser(data);
@@ -606,19 +634,23 @@ completing async operations.
 
 Combining multiple concepts for a real-world subscription scenario:  
 
-```javascript
-import { useEffect, useState } from 'react';
+```tsx
+import React, { useEffect, useState } from 'react';
 
-function LiveDataMonitor({ endpoint }) {
-  const [data, setData] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState(null);
+type LiveDataMonitorProps = {
+  endpoint: string;
+};
+
+function LiveDataMonitor({ endpoint }: LiveDataMonitorProps): JSX.Element {
+  const [data, setData] = useState<any[]>([]);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let intervalId = null;
+    let intervalId: NodeJS.Timeout | null = null;
     let isCancelled = false;
 
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
         const response = await fetch(endpoint);
         if (!response.ok) {
@@ -632,7 +664,7 @@ function LiveDataMonitor({ endpoint }) {
           setError(null);
         }
       } catch (err) {
-        if (!isCancelled) {
+        if (!isCancelled && err instanceof Error) {
           setError(err.message);
           setIsConnected(false);
         }
@@ -677,7 +709,7 @@ interval when the component unmounts or the endpoint changes.
 Each effect should handle one concern. Split complex logic into multiple  
 effects:  
 
-```javascript
+```ts
 // ✅ Good: Separate concerns
 useEffect(() => {
   document.title = `Count: ${count}`;
@@ -703,7 +735,7 @@ useEffect(() => {
 When updating state based on previous state, use functional updates to  
 avoid dependency issues:  
 
-```javascript
+```ts
 // ✅ Good: Functional update
 useEffect(() => {
   const id = setInterval(() => {
@@ -725,9 +757,11 @@ useEffect(() => {
 
 For complex or repeated effect logic, create custom hooks:  
 
-```javascript
-function useWindowWidth() {
-  const [width, setWidth] = useState(window.innerWidth);
+```tsx
+import React, { useState, useEffect } from 'react';
+
+function useWindowWidth(): number {
+  const [width, setWidth] = useState<number>(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
@@ -738,7 +772,7 @@ function useWindowWidth() {
   return width;
 }
 
-function ResponsiveComponent() {
+function ResponsiveComponent(): JSX.Element {
   const width = useWindowWidth();
   return <div>Window width: {width}px</div>;
 }
@@ -754,7 +788,7 @@ your code more maintainable and testable.
 Resources like timers, subscriptions, and event listeners must be cleaned  
 up to prevent memory leaks:  
 
-```javascript
+```ts
 useEffect(() => {
   const timer = setTimeout(() => {}, 1000);
   const listener = () => {};
@@ -771,7 +805,7 @@ useEffect(() => {
 
 Be careful with dependencies to prevent infinite render loops:  
 
-```javascript
+```ts
 // ❌ Bad: Infinite loop
 useEffect(() => {
   setCount(count + 1);

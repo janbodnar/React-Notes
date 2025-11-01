@@ -48,23 +48,23 @@ practices for handling events in modern React applications.
 Click events are the most common form of user interaction in web  
 applications. React handles them through the `onClick` attribute.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, MouseEvent } from 'react';
 
-function ClickExample() {
-  const [count, setCount] = useState(0);
-  const [message, setMessage] = useState("");
+function ClickExample(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
+  const [message, setMessage] = useState<string>("");
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     setCount(count + 1);
   };
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = (): void => {
     setCount(count * 2);
     setMessage("Count doubled!");
   };
 
-  const handleRightClick = (event) => {
+  const handleRightClick = (event: MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     setMessage("Right click detected!");
   };
@@ -106,9 +106,11 @@ clean and makes testing easier.
 
 Access detailed information about click events through the event object.  
 
-```jsx
-function ClickEventDetails() {
-  const handleClickWithDetails = (event) => {
+```tsx
+import React, { MouseEvent } from 'react';
+
+function ClickEventDetails(): JSX.Element {
+  const handleClickWithDetails = (event: MouseEvent<HTMLButtonElement>): void => {
     console.log('Button clicked:', event.currentTarget.textContent);
     console.log('Click coordinates:', event.clientX, event.clientY);
     console.log('Shift key held:', event.shiftKey);
@@ -116,7 +118,7 @@ function ClickEventDetails() {
     console.log('Alt key held:', event.altKey);
   };
 
-  const handleLinkClick = (event) => {
+  const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>): void => {
     event.preventDefault();
     console.log('Link navigation prevented');
     // Custom navigation logic here
@@ -152,30 +154,35 @@ like following links or submitting forms.
 
 Form events manage data collection and submission in React applications.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function FormSubmitExample() {
-  const [formData, setFormData] = useState({
+type FormData = {
+  username: string;
+  email: string;
+  message: string;
+};
+
+function FormSubmitExample(): JSX.Element {
+  const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
     message: ""
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     console.log('Form submitted:', formData);
     setSubmitted(true);
     
-    // Simulate API call
     setTimeout(() => {
       setSubmitted(false);
       setFormData({ username: "", email: "", message: "" });
     }, 2000);
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = event.target;
     setFormData(prev => ({
       ...prev,
@@ -236,33 +243,31 @@ corresponding state property.
 
 Track input changes in real-time with onChange and onInput events.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function InputChangeExample() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [charCount, setCharCount] = useState(0);
-  const [password, setPassword] = useState("");
+function InputChangeExample(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [charCount, setCharCount] = useState<number>(0);
+  const [password, setPassword] = useState<string>("");
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = event.target.value;
     setSearchTerm(value);
     setCharCount(value.length);
   };
 
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = event.target.value;
     setPassword(value);
     
-    // Real-time validation
     if (value.length < 8) {
       console.log('Password too short');
     }
   };
 
-  const handleInput = (event) => {
-    // onInput fires on every input change
-    console.log('Input event:', event.target.value);
+  const handleInput = (event: FormEvent<HTMLInputElement>): void => {
+    console.log('Input event:', (event.target as HTMLInputElement).value);
   };
 
   return (
@@ -304,18 +309,17 @@ debouncing the handler to reduce state updates.
 
 Keyboard events enable keyboard navigation and shortcuts in applications.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
 
-function KeyboardEventExample() {
-  const [inputValue, setInputValue] = useState("");
-  const [pressedKey, setPressedKey] = useState("");
-  const [items, setItems] = useState([]);
+function KeyboardEventExample(): JSX.Element {
+  const [inputValue, setInputValue] = useState<string>("");
+  const [pressedKey, setPressedKey] = useState<string>("");
+  const [items, setItems] = useState<string[]>([]);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     setPressedKey(event.key);
     
-    // Submit on Enter
     if (event.key === 'Enter') {
       event.preventDefault();
       if (inputValue.trim()) {
@@ -324,19 +328,17 @@ function KeyboardEventExample() {
       }
     }
     
-    // Clear on Escape
     if (event.key === 'Escape') {
       setInputValue("");
     }
     
-    // Check for keyboard shortcuts
     if (event.ctrlKey && event.key === 's') {
       event.preventDefault();
       console.log('Save shortcut triggered');
     }
   };
 
-  const handleKeyUp = (event) => {
+  const handleKeyUp = (event: KeyboardEvent<HTMLInputElement>): void => {
     console.log('Key released:', event.key);
   };
 
@@ -345,7 +347,7 @@ function KeyboardEventExample() {
       <input
         type="text"
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
         placeholder="Type and press Enter"
@@ -379,15 +381,15 @@ Ctrl+S saving the page. The `onKeyPress` event is deprecated; use
 
 Implement arrow key navigation and complex keyboard interactions.  
 
-```jsx
-import { useState, useRef } from 'react';
+```tsx
+import React, { useState, useRef, KeyboardEvent } from 'react';
 
-function KeyboardNavigationExample() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const items = ['First Item', 'Second Item', 'Third Item', 'Fourth Item'];
-  const listRef = useRef(null);
+function KeyboardNavigationExample(): JSX.Element {
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const items: string[] = ['First Item', 'Second Item', 'Third Item', 'Fourth Item'];
+  const listRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
@@ -462,33 +464,31 @@ Consider using `useRef` to manage focus programmatically when needed.
 
 Focus events manage input focus state and validation timing.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, FocusEvent, ChangeEvent } from 'react';
 
-function FocusBlurExample() {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
+function FocusBlurExample(): JSX.Element {
+  const [email, setEmail] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const handleFocus = (event) => {
+  const handleFocus = (event: FocusEvent<HTMLInputElement>): void => {
     setIsFocused(true);
     setEmailError("");
     console.log('Input focused');
   };
 
-  const handleBlur = (event) => {
+  const handleBlur = (event: FocusEvent<HTMLInputElement>): void => {
     setIsFocused(false);
     
-    // Validate on blur
     const value = event.target.value;
     if (value && !value.includes('@')) {
       setEmailError('Invalid email format');
     }
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setEmail(event.target.value);
-    // Clear error while typing
     if (emailError) {
       setEmailError("");
     }
@@ -532,34 +532,34 @@ requirements and validate data at appropriate times.
 
 Control focus programmatically for better user experience.  
 
-```jsx
-import { useRef, useState } from 'react';
+```tsx
+import React, { useRef, useState, KeyboardEvent } from 'react';
 
-function FocusManagementExample() {
-  const usernameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const [step, setStep] = useState(1);
+function FocusManagementExample(): JSX.Element {
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [step, setStep] = useState<number>(1);
 
-  const handleUsernameKeyDown = (event) => {
+  const handleUsernameKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      emailRef.current.focus();
+      emailRef.current?.focus();
       setStep(2);
     }
   };
 
-  const handleEmailKeyDown = (event) => {
+  const handleEmailKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      passwordRef.current.focus();
+      passwordRef.current?.focus();
       setStep(3);
     }
   };
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     setStep(1);
-    usernameRef.current.focus();
+    usernameRef.current?.focus();
   };
 
   return (
@@ -608,24 +608,29 @@ advances to the next field or form step.
 
 Mouse events track pointer movements and interactions beyond simple clicks.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, MouseEvent } from 'react';
 
-function MouseEventExample() {
-  const [isHovering, setIsHovering] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [enteredCount, setEnteredCount] = useState(0);
+type Position = {
+  x: number;
+  y: number;
+};
 
-  const handleMouseEnter = () => {
+function MouseEventExample(): JSX.Element {
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const [enteredCount, setEnteredCount] = useState<number>(0);
+
+  const handleMouseEnter = (): void => {
     setIsHovering(true);
     setEnteredCount(prev => prev + 1);
   };
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (): void => {
     setIsHovering(false);
   };
 
-  const handleMouseMove = (event) => {
+  const handleMouseMove = (event: MouseEvent<HTMLDivElement>): void => {
     const rect = event.currentTarget.getBoundingClientRect();
     setPosition({
       x: event.clientX - rect.left,
@@ -673,24 +678,24 @@ it fires frequently—consider throttling or debouncing for performance.
 
 Implement drag and drop functionality with mouse events.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, DragEvent } from 'react';
 
-function DragDropExample() {
-  const [draggedItem, setDraggedItem] = useState(null);
-  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+function DragDropExample(): JSX.Element {
+  const [draggedItem, setDraggedItem] = useState<number | null>(null);
+  const [items, setItems] = useState<string[]>(['Item 1', 'Item 2', 'Item 3']);
 
-  const handleDragStart = (event, index) => {
+  const handleDragStart = (event: DragEvent<HTMLDivElement>, index: number): void => {
     setDraggedItem(index);
     event.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event: DragEvent<HTMLDivElement>): void => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = (event, dropIndex) => {
+  const handleDrop = (event: DragEvent<HTMLDivElement>, dropIndex: number): void => {
     event.preventDefault();
     
     if (draggedItem === null) return;
@@ -745,27 +750,27 @@ accessibility and mobile support.
 
 Handle touch gestures for mobile-friendly interfaces.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, TouchEvent, CSSProperties } from 'react';
 
-function TouchEventExample() {
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-  const [swipeDirection, setSwipeDirection] = useState("");
-  const [tapCount, setTapCount] = useState(0);
+function TouchEventExample(): JSX.Element {
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [swipeDirection, setSwipeDirection] = useState<string>("");
+  const [tapCount, setTapCount] = useState<number>(0);
 
   const minSwipeDistance = 50;
 
-  const handleTouchStart = (event) => {
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>): void => {
     setTouchEnd(null);
     setTouchStart(event.touches[0].clientX);
   };
 
-  const handleTouchMove = (event) => {
+  const handleTouchMove = (event: TouchEvent<HTMLDivElement>): void => {
     setTouchEnd(event.touches[0].clientX);
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (): void => {
     if (!touchStart || !touchEnd) return;
     
     const distance = touchStart - touchEnd;
@@ -782,8 +787,21 @@ function TouchEventExample() {
     setTouchEnd(null);
   };
 
-  const handleTap = () => {
+  const handleTap = (): void => {
     setTapCount(prev => prev + 1);
+  };
+
+  const touchAreaStyle: CSSProperties = {
+    width: '100%',
+    height: '200px',
+    backgroundColor: '#e8f5e9',
+    border: '2px solid #4caf50',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    userSelect: 'none',
+    WebkitUserSelect: 'none'
   };
 
   return (
@@ -793,18 +811,7 @@ function TouchEventExample() {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onClick={handleTap}
-        style={{
-          width: '100%',
-          height: '200px',
-          backgroundColor: '#e8f5e9',
-          border: '2px solid #4caf50',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          userSelect: 'none',
-          WebkitUserSelect: 'none'
-        }}
+        style={touchAreaStyle}
       >
         <p>Swipe left or right</p>
         <p>{swipeDirection}</p>
@@ -833,21 +840,21 @@ both. Handle this by using touch events exclusively on mobile or checking
 
 Implement pinch-to-zoom and multi-finger gestures.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, TouchEvent as ReactTouchEvent, Touch } from 'react';
 
-function MultiTouchExample() {
-  const [scale, setScale] = useState(1);
-  const [touches, setTouches] = useState(0);
-  const [initialDistance, setInitialDistance] = useState(null);
+function MultiTouchExample(): JSX.Element {
+  const [scale, setScale] = useState<number>(1);
+  const [touches, setTouches] = useState<number>(0);
+  const [initialDistance, setInitialDistance] = useState<number | null>(null);
 
-  const getDistance = (touch1, touch2) => {
+  const getDistance = (touch1: Touch, touch2: Touch): number => {
     const dx = touch1.clientX - touch2.clientX;
     const dy = touch1.clientY - touch2.clientY;
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  const handleTouchStart = (event) => {
+  const handleTouchStart = (event: ReactTouchEvent<HTMLDivElement>): void => {
     const touchCount = event.touches.length;
     setTouches(touchCount);
     
@@ -857,10 +864,10 @@ function MultiTouchExample() {
     }
   };
 
-  const handleTouchMove = (event) => {
+  const handleTouchMove = (event: ReactTouchEvent<HTMLDivElement>): void => {
     event.preventDefault();
     
-    if (event.touches.length === 2 && initialDistance) {
+    if (event.touches.length === 2 && initialDistance !== null) {
       const currentDistance = getDistance(event.touches[0], event.touches[1]);
       const newScale = currentDistance / initialDistance;
       setScale(prevScale => Math.max(0.5, Math.min(prevScale * newScale, 3)));
@@ -868,7 +875,7 @@ function MultiTouchExample() {
     }
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (): void => {
     setInitialDistance(null);
     setTouches(0);
   };
@@ -923,33 +930,35 @@ Hammer.js or react-use-gesture.
 
 Leverage event bubbling for efficient event handling.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, MouseEvent } from 'react';
 
-function EventDelegationExample() {
-  const [clickedItem, setClickedItem] = useState("");
-  const [events, setEvents] = useState([]);
+function EventDelegationExample(): JSX.Element {
+  const [clickedItem, setClickedItem] = useState<string>("");
+  const [events, setEvents] = useState<string[]>([]);
 
-  const logEvent = (message) => {
+  const logEvent = (message: string): void => {
     setEvents(prev => [...prev.slice(-4), message]);
   };
 
-  const handleContainerClick = (event) => {
-    logEvent(`Container clicked: ${event.target.tagName}`);
+  const handleContainerClick = (event: MouseEvent<HTMLDivElement>): void => {
+    const target = event.target as HTMLElement;
+    logEvent(`Container clicked: ${target.tagName}`);
     
-    if (event.target.tagName === 'BUTTON') {
-      const action = event.target.dataset.action;
-      setClickedItem(action);
-      logEvent(`Button action: ${action}`);
+    if (target.tagName === 'BUTTON') {
+      const action = target.dataset.action;
+      if (action) {
+        setClickedItem(action);
+        logEvent(`Button action: ${action}`);
+      }
     }
   };
 
-  const handleInnerClick = (event) => {
+  const handleInnerClick = (event: MouseEvent<HTMLDivElement>): void => {
     logEvent('Inner div clicked');
-    // Event will bubble to container
   };
 
-  const handleStopPropagation = (event) => {
+  const handleStopPropagation = (event: MouseEvent<HTMLButtonElement>): void => {
     event.stopPropagation();
     logEvent('Propagation stopped!');
   };
@@ -1000,15 +1009,15 @@ elements without attaching new listeners.
 
 Control browser default actions with event.preventDefault().  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, FormEvent, ChangeEvent, MouseEvent, KeyboardEvent } from 'react';
 
-function PreventDefaultExample() {
-  const [todos, setTodos] = useState([]);
-  const [input, setInput] = useState("");
+function PreventDefaultExample(): JSX.Element {
+  const [todos, setTodos] = useState<string[]>([]);
+  const [input, setInput] = useState<string>("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent page reload
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
     
     if (input.trim()) {
       setTodos([...todos, input]);
@@ -1016,18 +1025,17 @@ function PreventDefaultExample() {
     }
   };
 
-  const handleLinkClick = (event) => {
+  const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>): void => {
     event.preventDefault();
     console.log('Navigation prevented - custom behavior here');
   };
 
-  const handleContextMenu = (event) => {
+  const handleContextMenu = (event: MouseEvent<HTMLDivElement>): void => {
     event.preventDefault();
     console.log('Custom context menu would appear here');
   };
 
-  const handleKeyDown = (event) => {
-    // Prevent certain characters
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter' && event.ctrlKey) {
       event.preventDefault();
       console.log('Ctrl+Enter prevented');
@@ -1040,7 +1048,7 @@ function PreventDefaultExample() {
         <input
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Add todo"
         />
@@ -1081,52 +1089,59 @@ that. Combining both provides full control over event flow.
 
 Handle asynchronous operations in event handlers safely.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, MouseEvent, FormEvent } from 'react';
 
-function AsyncEventHandlerExample() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+type MockData = {
+  id: number;
+  message: string;
+};
 
-  const handleAsyncClick = async (event) => {
+function AsyncEventHandlerExample(): JSX.Element {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [data, setData] = useState<MockData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAsyncClick = async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
     
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const mockData = {
+      const mockData: MockData = {
         id: Date.now(),
         message: "Data loaded successfully!"
       };
       
       setData(mockData);
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     
-    // Extract form data
-    const formData = new FormData(event.target);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const values = Object.fromEntries(formData.entries());
     
     setIsLoading(true);
     
     try {
-      // Simulate API submission
       await new Promise(resolve => setTimeout(resolve, 1500));
       console.log('Submitted:', values);
-      event.target.reset();
+      form.reset();
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setIsLoading(false);
     }

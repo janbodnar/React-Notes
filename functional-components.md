@@ -30,8 +30,10 @@ and performance optimization.
 
 A minimal functional component that renders static content.  
 
-```jsx
-function Welcome() {
+```tsx
+import React from 'react';
+
+function Welcome(): JSX.Element {
   return <h1>Hello there!</h1>;
 }
 
@@ -49,8 +51,14 @@ be used in other components by writing `<Welcome />`.
 
 Components accept data through props (properties) to make them reusable.  
 
-```jsx
-function Greeting(props) {
+```tsx
+import React from 'react';
+
+type GreetingProps = {
+  name: string;
+};
+
+function Greeting(props: GreetingProps): JSX.Element {
   return <h1>Hello, {props.name}!</h1>;
 }
 
@@ -68,8 +76,16 @@ component dynamic and reusable with different data. Usage example:
 
 Destructuring props in the function signature makes code cleaner.  
 
-```jsx
-function UserCard({ name, age, occupation }) {
+```tsx
+import React from 'react';
+
+type UserCardProps = {
+  name: string;
+  age: number;
+  occupation: string;
+};
+
+function UserCard({ name, age, occupation }: UserCardProps): JSX.Element {
   return (
     <div className="user-card">
       <h2>{name}</h2>
@@ -93,8 +109,15 @@ pattern in modern React development.
 
 Default values ensure components work even when props are missing.  
 
-```jsx
-function Button({ text = "Click me", variant = "primary" }) {
+```tsx
+import React from 'react';
+
+type ButtonProps = {
+  text?: string;
+  variant?: 'primary' | 'secondary';
+};
+
+function Button({ text = "Click me", variant = "primary" }: ButtonProps): JSX.Element {
   return <button className={`btn btn-${variant}`}>{text}</button>;
 }
 
@@ -112,8 +135,15 @@ makes components more robust.
 
 Arrow functions provide a more concise syntax for functional components.  
 
-```jsx
-const Header = ({ title, subtitle }) => (
+```tsx
+import React from 'react';
+
+type HeaderProps = {
+  title: string;
+  subtitle?: string;
+};
+
+const Header = ({ title, subtitle }: HeaderProps): JSX.Element => (
   <header>
     <h1>{title}</h1>
     {subtitle && <h2>{subtitle}</h2>}
@@ -134,8 +164,16 @@ syntax conditionally renders the subtitle only if it exists.
 
 Fragments let you group elements without adding extra DOM nodes.  
 
-```jsx
-function ProductInfo({ name, price, description }) {
+```tsx
+import React from 'react';
+
+type ProductInfoProps = {
+  name: string;
+  price: number;
+  description: string;
+};
+
+function ProductInfo({ name, price, description }: ProductInfoProps): JSX.Element {
   return (
     <>
       <h3>{name}</h3>
@@ -159,8 +197,15 @@ and semantic.
 
 Components can render different content based on conditions.  
 
-```jsx
-function StatusMessage({ isLoggedIn, username }) {
+```tsx
+import React from 'react';
+
+type StatusMessageProps = {
+  isLoggedIn: boolean;
+  username: string;
+};
+
+function StatusMessage({ isLoggedIn, username }: StatusMessageProps): JSX.Element {
   if (isLoggedIn) {
     return <p>Welcome back, {username}!</p>;
   }
@@ -181,8 +226,15 @@ for creating dynamic, interactive UIs.
 
 Ternary operators provide inline conditional rendering.  
 
-```jsx
-function Alert({ type, message }) {
+```tsx
+import React from 'react';
+
+type AlertProps = {
+  type: 'success' | 'error' | 'info';
+  message: string;
+};
+
+function Alert({ type, message }: AlertProps): JSX.Element {
   return (
     <div className={`alert alert-${type}`}>
       {type === "error" ? "⚠️ " : "ℹ️ "}
@@ -205,8 +257,20 @@ condition. This example adds different icons based on alert type.
 
 Rendering arrays of data is common in React applications.  
 
-```jsx
-function TodoList({ todos }) {
+```tsx
+import React from 'react';
+
+type Todo = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
+
+type TodoListProps = {
+  todos: Todo[];
+};
+
+function TodoList({ todos }: TodoListProps): JSX.Element {
   return (
     <ul>
       {todos.map((todo) => (
@@ -233,15 +297,21 @@ This pattern is essential for rendering dynamic lists.
 
 Event handlers make components interactive.  
 
-```jsx
-function Counter({ initialCount = 0 }) {
-  const [count, setCount] = React.useState(initialCount);
+```tsx
+import React, { useState } from 'react';
 
-  const handleIncrement = () => {
+type CounterProps = {
+  initialCount?: number;
+};
+
+function Counter({ initialCount = 0 }: CounterProps): JSX.Element {
+  const [count, setCount] = useState<number>(initialCount);
+
+  const handleIncrement = (): void => {
     setCount(count + 1);
   };
 
-  const handleDecrement = () => {
+  const handleDecrement = (): void => {
     setCount(count - 1);
   };
 
@@ -268,11 +338,15 @@ functional components handle both interaction and state.
 
 The useState hook adds state management to functional components.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ToggleSwitch({ label }) {
-  const [isOn, setIsOn] = useState(false);
+type ToggleSwitchProps = {
+  label: string;
+};
+
+function ToggleSwitch({ label }: ToggleSwitchProps): JSX.Element {
+  const [isOn, setIsOn] = useState<boolean>(false);
 
   return (
     <div className="toggle-switch">
@@ -298,33 +372,33 @@ hook is the foundation of stateful functional components.
 
 Components can manage multiple independent state values.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function RegistrationForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+function RegistrationForm(): JSX.Element {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
 
   return (
     <form>
       <input
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
         placeholder="Email"
       />
       <input
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         placeholder="Password"
       />
       <label>
         <input
           type="checkbox"
           checked={agreeToTerms}
-          onChange={(e) => setAgreeToTerms(e.target.checked)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setAgreeToTerms(e.target.checked)}
         />
         I agree to terms
       </label>
@@ -346,10 +420,14 @@ pieces are unrelated. React batches state updates for performance.
 
 The useEffect hook handles side effects like data fetching.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function DocumentTitle({ title }) {
+type DocumentTitleProps = {
+  title: string;
+};
+
+function DocumentTitle({ title }: DocumentTitleProps): JSX.Element {
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -371,18 +449,28 @@ array `[]` means run once; no array means run every render.
 
 A common pattern for loading data when a component mounts.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function UserProfile({ userId }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+type UserProfileProps = {
+  userId: number;
+};
+
+function UserProfile({ userId }: UserProfileProps): JSX.Element {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setLoading(true);
     fetch(`/api/users/${userId}`)
       .then(response => response.json())
-      .then(data => {
+      .then((data: User) => {
         setUser(data);
         setLoading(false);
       });
@@ -413,12 +501,17 @@ and error states for better user experience.
 
 The useContext hook accesses values from React Context.  
 
-```jsx
-import { useContext } from 'react';
-import { ThemeContext } from './ThemeContext';
+```tsx
+import React, { useContext, ReactNode } from 'react';
+// Assuming ThemeContext is defined elsewhere and has a type
+import { ThemeContext, Theme } from './ThemeContext';
 
-function ThemedButton({ children }) {
-  const theme = useContext(ThemeContext);
+type ThemedButtonProps = {
+  children: ReactNode;
+};
+
+function ThemedButton({ children }: ThemedButtonProps): JSX.Element {
+  const theme = useContext<Theme>(ThemeContext);
 
   return (
     <button
@@ -446,10 +539,22 @@ authentication, and language preferences.
 
 The useReducer hook manages complex state logic.  
 
-```jsx
-import { useReducer } from 'react';
+```tsx
+import React, { useReducer } from 'react';
 
-function shoppingCartReducer(state, action) {
+type Item = {
+  id: number;
+  name: string;
+};
+
+type State = Item[];
+
+type Action =
+  | { type: 'ADD_ITEM'; item: Item }
+  | { type: 'REMOVE_ITEM'; id: number }
+  | { type: 'CLEAR_CART' };
+
+function shoppingCartReducer(state: State, action: Action): State {
   switch (action.type) {
     case 'ADD_ITEM':
       return [...state, action.item];
@@ -462,7 +567,7 @@ function shoppingCartReducer(state, action) {
   }
 }
 
-function ShoppingCart() {
+function ShoppingCart(): JSX.Element {
   const [cart, dispatch] = useReducer(shoppingCartReducer, []);
 
   return (
@@ -496,11 +601,15 @@ predictable and testable.
 
 The useMemo hook optimizes expensive calculations.  
 
-```jsx
-import { useState, useMemo } from 'react';
+```tsx
+import React, { useState, useMemo } from 'react';
 
-function ExpensiveCalculation({ numbers }) {
-  const [multiplier, setMultiplier] = useState(1);
+type ExpensiveCalculationProps = {
+  numbers: number[];
+};
+
+function ExpensiveCalculation({ numbers }: ExpensiveCalculationProps): JSX.Element {
+  const [multiplier, setMultiplier] = useState<number>(1);
 
   const total = useMemo(() => {
     console.log('Calculating total...');
@@ -531,13 +640,17 @@ The memoized value is returned directly, not in a function.
 
 The useCallback hook memoizes functions to prevent unnecessary re-renders.  
 
-```jsx
-import { useState, useCallback } from 'react';
+```tsx
+import React, { useState, useCallback, ChangeEvent } from 'react';
 
-function SearchableList({ items }) {
-  const [query, setQuery] = useState('');
+type SearchableListProps = {
+  items: string[];
+};
 
-  const handleSearch = useCallback((event) => {
+function SearchableList({ items }: SearchableListProps): JSX.Element {
+  const [query, setQuery] = useState<string>('');
+
+  const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   }, []);
 
@@ -576,14 +689,14 @@ unnecessary renders. Without dependencies, the function is created once.
 
 The useRef hook creates mutable references that persist across renders.  
 
-```jsx
-import { useRef, useEffect } from 'react';
+```tsx
+import React, { useRef, useEffect } from 'react';
 
-function FocusInput() {
-  const inputRef = useRef(null);
+function FocusInput(): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
   return (
@@ -611,11 +724,11 @@ state, updating a ref doesn't cause a re-render.
 
 Custom hooks extract reusable logic into separate functions.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function useWindowWidth() {
-  const [width, setWidth] = useState(window.innerWidth);
+function useWindowWidth(): number {
+  const [width, setWidth] = useState<number>(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
@@ -626,7 +739,7 @@ function useWindowWidth() {
   return width;
 }
 
-function ResponsiveComponent() {
+function ResponsiveComponent(): JSX.Element {
   const width = useWindowWidth();
 
   return (
@@ -651,24 +764,36 @@ multiple components. The cleanup function prevents memory leaks.
 
 Real-world components often combine several hooks.  
 
-```jsx
-import { useState, useEffect, useCallback } from 'react';
+```tsx
+import React, { useState, useEffect, useCallback } from 'react';
 
-function DataTable({ apiEndpoint }) {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [sortField, setSortField] = useState('name');
+type Item = {
+  id: number;
+  name: string;
+  date: string;
+};
+
+type DataTableProps = {
+  apiEndpoint: string;
+};
+
+function DataTable({ apiEndpoint }: DataTableProps): JSX.Element {
+  const [data, setData] = useState<Item[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<'name' | 'date'>('name');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(apiEndpoint);
-      const json = await response.json();
+      const json: Item[] = await response.json();
       setData(json);
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -712,17 +837,23 @@ common in production applications.
 
 Controlled components sync form inputs with React state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function ContactForm() {
-  const [formData, setFormData] = useState({
+type FormData = {
+  name: string;
+  email: string;
+  message: string;
+};
+
+function ContactForm(): JSX.Element {
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: ''
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -730,7 +861,7 @@ function ContactForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log('Form submitted:', formData);
   };
@@ -774,18 +905,18 @@ easier. The spread operator preserves other form fields when updating.
 
 Uncontrolled components use refs to access form values.  
 
-```jsx
-import { useRef } from 'react';
+```tsx
+import React, { useRef, FormEvent } from 'react';
 
-function QuickForm() {
-  const nameRef = useRef();
-  const emailRef = useRef();
+function QuickForm(): JSX.Element {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const formData = {
-      name: nameRef.current.value,
-      email: emailRef.current.value
+      name: nameRef.current?.value,
+      email: emailRef.current?.value
     };
     console.log('Form submitted:', formData);
   };
@@ -823,16 +954,21 @@ approach is useful for simple forms or integrating with non-React code.
 
 Form validation ensures data quality before submission.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function SignupForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({});
+type Errors = {
+  email?: string;
+  password?: string;
+};
 
-  const validate = () => {
-    const newErrors = {};
+function SignupForm(): JSX.Element {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [errors, setErrors] = useState<Errors>({});
+
+  const validate = (): Errors => {
+    const newErrors: Errors = {};
     if (!email.includes('@')) {
       newErrors.email = 'Invalid email address';
     }
@@ -842,7 +978,7 @@ function SignupForm() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
@@ -858,7 +994,7 @@ function SignupForm() {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           placeholder="Email"
         />
         {errors.email && <span className="error">{errors.email}</span>}
@@ -867,7 +1003,7 @@ function SignupForm() {
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           placeholder="Password"
         />
         {errors.password && <span className="error">{errors.password}</span>}
@@ -891,8 +1027,15 @@ bypassed. Storing errors in state allows displaying multiple error messages.
 
 Children props allow component composition and nesting.  
 
-```jsx
-function Card({ title, children }) {
+```tsx
+import React, { ReactNode } from 'react';
+
+type CardProps = {
+  title?: string;
+  children: ReactNode;
+};
+
+function Card({ title, children }: CardProps): JSX.Element {
   return (
     <div className="card">
       {title && <h3 className="card-title">{title}</h3>}
@@ -903,7 +1046,7 @@ function Card({ title, children }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <Card title="User Profile">
       <p>Name: John Doe</p>
@@ -927,12 +1070,23 @@ flexible, reusable layout components.
 Render props share code between components using a prop whose value is a  
 function.  
 
-```jsx
-function MouseTracker({ render }) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+```tsx
+import React, { useState, useEffect, ReactNode } from 'react';
+
+type Position = {
+  x: number;
+  y: number;
+};
+
+type MouseTrackerProps = {
+  render: (position: Position) => ReactNode;
+};
+
+function MouseTracker({ render }: MouseTrackerProps): ReactNode {
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent): void => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener('mousemove', handleMouseMove);
@@ -942,7 +1096,7 @@ function MouseTracker({ render }) {
   return render(position);
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <MouseTracker
       render={({ x, y }) => (
@@ -966,17 +1120,32 @@ replaced by custom hooks but is still useful in some scenarios.
 
 Higher-Order Components (HOC) wrap components to add functionality.  
 
-```jsx
-function withLoading(Component) {
-  return function WithLoadingComponent({ isLoading, ...props }) {
+```tsx
+import React, { ComponentType } from 'react';
+
+type WithLoadingProps = {
+  isLoading: boolean;
+};
+
+function withLoading<P extends object>(Component: ComponentType<P>) {
+  return function WithLoadingComponent({ isLoading, ...props }: WithLoadingProps & P): JSX.Element {
     if (isLoading) {
       return <div>Loading...</div>;
     }
-    return <Component {...props} />;
+    return <Component {...props as P} />;
   };
 }
 
-function UserList({ users }) {
+type User = {
+  id: number;
+  name: string;
+};
+
+type UserListProps = {
+  users: User[];
+};
+
+function UserList({ users }: UserListProps): JSX.Element {
   return (
     <ul>
       {users.map(user => (
@@ -1004,12 +1173,12 @@ still useful for wrapping components with additional rendering logic.
 
 Lazy loading components improves initial load performance.  
 
-```jsx
-import { lazy, Suspense } from 'react';
+```tsx
+import React, { lazy, Suspense } from 'react';
 
 const HeavyComponent = lazy(() => import('./HeavyComponent'));
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <h1>My App</h1>
@@ -1034,20 +1203,29 @@ significantly reduces initial bundle size for large applications.
 
 Error boundaries catch JavaScript errors in child components.  
 
-```jsx
-import { Component } from 'react';
+```tsx
+import React, { Component, ReactNode, ErrorInfo } from 'react';
 
-class ErrorBoundary extends Component {
-  constructor(props) {
+type ErrorBoundaryProps = {
+  children: ReactNode;
+};
+
+type ErrorBoundaryState = {
+  hasError: boolean;
+  error: Error | null;
+};
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.log('Error caught:', error, errorInfo);
   }
 
@@ -1078,15 +1256,22 @@ and provide graceful error handling. Wrap parts of your tree in boundaries.
 
 Portals render children into a different DOM node.  
 
-```jsx
+```tsx
+import React, { ReactNode, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
-function Modal({ isOpen, onClose, children }) {
+type ModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+};
+
+function Modal({ isOpen, onClose, children }: ModalProps): React.ReactPortal | null {
   if (!isOpen) return null;
 
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e: MouseEvent) => e.stopPropagation()}>
         {children}
         <button onClick={onClose}>Close</button>
       </div>
@@ -1109,11 +1294,11 @@ constraints. Events still bubble through the React tree normally.
 
 Syncing state with localStorage persists data across sessions.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
-function useLocalStorage(key, initialValue) {
-  const [value, setValue] = useState(() => {
+function useLocalStorage<T>(key: string, initialValue: T): [T, Dispatch<SetStateAction<T>>] {
+  const [value, setValue] = useState<T>(() => {
     const stored = localStorage.getItem(key);
     return stored ? JSON.parse(stored) : initialValue;
   });
@@ -1125,8 +1310,10 @@ function useLocalStorage(key, initialValue) {
   return [value, setValue];
 }
 
-function ThemeSelector() {
-  const [theme, setTheme] = useLocalStorage('theme', 'light');
+type Theme = 'light' | 'dark';
+
+function ThemeSelector(): JSX.Element {
+  const [theme, setTheme] = useLocalStorage<Theme>('theme', 'light');
 
   return (
     <div>
@@ -1153,11 +1340,11 @@ preferences.
 
 Debouncing delays function execution until after user stops typing.  
 
-```jsx
-import { useState, useEffect, useCallback } from 'react';
+```tsx
+import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1170,8 +1357,8 @@ function useDebounce(value, delay) {
   return debouncedValue;
 }
 
-function SearchBox() {
-  const [searchTerm, setSearchTerm] = useState('');
+function SearchBox(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
@@ -1185,7 +1372,7 @@ function SearchBox() {
     <input
       type="text"
       value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
       placeholder="Search..."
     />
   );
@@ -1205,10 +1392,21 @@ on each keystroke. Essential for search inputs that trigger API calls.
 
 React.memo prevents unnecessary re-renders of functional components.  
 
-```jsx
-import { memo } from 'react';
+```tsx
+import React, { memo } from 'react';
 
-const ExpensiveListItem = memo(({ item, onSelect }) => {
+type Item = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+type ExpensiveListItemProps = {
+  item: Item;
+  onSelect: (id: number) => void;
+};
+
+const ExpensiveListItem = memo(({ item, onSelect }: ExpensiveListItemProps) => {
   console.log('Rendering item:', item.id);
   return (
     <div onClick={() => onSelect(item.id)}>
@@ -1218,7 +1416,12 @@ const ExpensiveListItem = memo(({ item, onSelect }) => {
   );
 });
 
-function OptimizedList({ items, onSelectItem }) {
+type OptimizedListProps = {
+  items: Item[];
+  onSelectItem: (id: number) => void;
+};
+
+function OptimizedList({ items, onSelectItem }: OptimizedListProps): JSX.Element {
   return (
     <div>
       {items.map(item => (
@@ -1246,11 +1449,19 @@ props to maximize effectiveness. Don't over-optimize; measure first.
 
 Summary of functional component best practices.  
 
-```jsx
-import { useState, useEffect, useCallback, memo } from 'react';
+```tsx
+import React, { useState, useEffect, useCallback, memo } from 'react';
 
-// 1. Named exports for better tree-shaking
-export const UserDashboard = memo(({ userId }) => {
+type User = {
+  id: number;
+  name: string;
+};
+
+type UserDashboardProps = {
+  userId: number;
+};
+
+export const UserDashboard = memo(({ userId }: UserDashboardProps) => {
   // 2. Group related state
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -1294,7 +1505,6 @@ export const UserDashboard = memo(({ userId }) => {
   );
 });
 
-// 8. PropTypes or TypeScript for type safety (if using PropTypes)
 UserDashboard.displayName = 'UserDashboard';
 ```
 
