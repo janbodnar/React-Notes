@@ -252,25 +252,32 @@ causing performance issues.
 Using array indices as keys can cause bugs when the list changes.  
 
 ```tsx
-import React, { useState } from 'react';
+import { type JSX, useState } from "react";
 
 function ProblematicIndexKeys(): JSX.Element {
   const [items, setItems] = useState<string[]>([
     "Item A",
-    "Item B", 
-    "Item C"
+    "Item B",
+    "Item C",
+    "Item D",
+    "Item E",
+    "Item F",
+    "Item G",
   ]);
-  
+
   const removeFirst = (): void => {
     setItems(items.slice(1));
   };
-  
+
   return (
     <div>
-      <button onClick={removeFirst}>Remove First Item</button>
+      <button type="button" onClick={removeFirst}>
+        Remove First Item
+      </button>
       <ul>
         {/* BAD: Using index as key in dynamic list */}
         {items.map((item, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <demonstration purposes>
           <li key={index}>
             {item} - Key: {index}
           </li>
