@@ -36,18 +36,18 @@ The simplest form of list rendering transforms an array of strings into
 elements.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function FruitList(): JSX.Element {
-  const fruits: string[] = ["Apple", "Banana", "Orange", "Mango", "Pineapple"];
-  
-  return (
-    <ul>
-      {fruits.map((fruit, index) => (
-        <li key={index}>{fruit}</li>
-      ))}
-    </ul>
-  );
+	const fruits: string[] = ["Apple", "Banana", "Orange", "Mango", "Pineapple"];
+
+	return (
+		<ul>
+			{fruits.map((fruit, index) => (
+				<li key={index}>{fruit}</li>
+			))}
+		</ul>
+	);
 }
 
 export default FruitList;
