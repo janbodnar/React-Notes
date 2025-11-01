@@ -106,7 +106,7 @@ Real applications typically work with arrays of objects containing multiple
 properties that need to be displayed.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type User = {
   id: number;
