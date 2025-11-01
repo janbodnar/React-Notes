@@ -202,7 +202,7 @@ Keys help React's reconciliation algorithm efficiently update the DOM by
 identifying which items changed.  
 
 ```tsx
-import React, { useState } from 'react';
+import { type JSX, useState } from "react";
 
 type Item = {
   id: number;
@@ -213,17 +213,19 @@ function DynamicList(): JSX.Element {
   const [items, setItems] = useState<Item[]>([
     { id: 1, text: "First item" },
     { id: 2, text: "Second item" },
-    { id: 3, text: "Third item" }
+    { id: 3, text: "Third item" },
   ]);
-  
+
   const shuffleItems = (): void => {
     const shuffled = [...items].sort(() => Math.random() - 0.5);
     setItems(shuffled);
   };
-  
+
   return (
     <div>
-      <button onClick={shuffleItems}>Shuffle Items</button>
+      <button type="button" onClick={shuffleItems}>
+        Shuffle Items
+      </button>
       <ul>
         {items.map((item) => (
           <li key={item.id}>{item.text}</li>
