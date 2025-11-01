@@ -161,15 +161,15 @@ This example shows the simplest React component—a functional component that
 returns JSX to display static content.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function Welcome(): JSX.Element {
-  return (
-    <div className="welcome-container">
-      <h1>Welcome to React</h1>
-      <p>React is a JavaScript library for building user interfaces.</p>
-    </div>
-  );
+	return (
+		<div className="welcome-container">
+			<h1>Welcome to React</h1>
+			<p>React is a JavaScript library for building user interfaces.</p>
+		</div>
+	);
 }
 
 export default Welcome;
@@ -188,22 +188,26 @@ Props allow components to receive data from their parents, making them
 reusable and configurable.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type GreetingProps = {
-  name: string;
-  message: string;
+	name: string;
+	message: string;
 };
 
 function Greeting({ name, message }: GreetingProps): JSX.Element {
-  return (
-    <div className="greeting-card">
-      <h2>Hello, {name}!</h2>
-      <p>{message}</p>
-    </div>
-  );
+	return (
+		<div className="greeting-card">
+			<h2>Hello, {name}!</h2>
+			<p>{message}</p>
+		</div>
+	);
 }
 
+export default Greeting;
+```
+
+```tsx
 function App(): JSX.Element {
   return (
     <div>
@@ -235,25 +239,31 @@ The `useState` hook enables functional components to manage internal state
 that persists across re-renders.  
 
 ```tsx
-import React, { useState } from 'react';
+import { type JSX, useState } from "react";
 
 function Counter(): JSX.Element {
-  const [count, setCount] = useState<number>(0);
+	const [count, setCount] = useState(0);
 
-  const increment = (): void => setCount(count + 1);
-  const decrement = (): void => setCount(count - 1);
-  const reset = (): void => setCount(0);
+	const increment = () => setCount(count + 1);
+	const decrement = () => setCount(count - 1);
+	const reset = () => setCount(0);
 
-  return (
-    <div className="counter-container">
-      <h2>Counter: {count}</h2>
-      <div className="button-group">
-        <button onClick={increment}>Increment</button>
-        <button onClick={decrement}>Decrement</button>
-        <button onClick={reset}>Reset</button>
-      </div>
-    </div>
-  );
+	return (
+		<div className="counter-container">
+			<h2>Counter: {count}</h2>
+			<div className="button-group">
+				<button type="button" onClick={increment}>
+					Increment
+				</button>
+				<button type="button" onClick={decrement}>
+					Decrement
+				</button>
+				<button type="button" onClick={reset}>
+					Reset
+				</button>
+			</div>
+		</div>
+	);
 }
 
 export default Counter;
@@ -273,58 +283,58 @@ This example shows controlled components—form inputs whose values are
 controlled by React state.  
 
 ```tsx
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { type ChangeEvent, type FormEvent, type JSX, useState } from "react";
 
 type FormData = {
-  username: string;
-  email: string;
+	username: string;
+	email: string;
 };
 
 function UserForm(): JSX.Element {
-  const [formData, setFormData] = useState<FormData>({
-    username: '',
-    email: ''
-  });
+	const [formData, setFormData] = useState<FormData>({
+		username: "",
+		email: "",
+	});
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
+	const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+	};
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert(`Username: ${formData.username}, Email: ${formData.email}`);
-  };
+	const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+		e.preventDefault();
+		console.log("Form submitted:", formData);
+		alert(`Username: ${formData.username}, Email: ${formData.email}`);
+	};
 
-  return (
-    <form onSubmit={handleSubmit} className="user-form">
-      <div className="form-group">
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-  );
+	return (
+		<form onSubmit={handleSubmit} className="user-form">
+			<div className="form-group">
+				<label htmlFor="username">Username:</label>
+				<input
+					type="text"
+					id="username"
+					name="username"
+					value={formData.username}
+					onChange={handleChange}
+				/>
+			</div>
+			<div className="form-group">
+				<label htmlFor="email">Email:</label>
+				<input
+					type="email"
+					id="email"
+					name="email"
+					value={formData.email}
+					onChange={handleChange}
+				/>
+			</div>
+			<button type="submit">Submit</button>
+		</form>
+	);
 }
 
 export default UserForm;
@@ -345,53 +355,53 @@ The `useEffect` hook handles side effects like data fetching, demonstrating
 how React components interact with external APIs.  
 
 ```tsx
-import React, { useState, useEffect } from 'react';
+import { type JSX, useEffect, useState } from "react";
 
 type User = {
-  id: number;
-  name: string;
-  role: string;
+	id: number;
+	name: string;
+	role: string;
 };
 
 function UserList(): JSX.Element {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+	const [users, setUsers] = useState<User[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchUsers = async (): Promise<void> => {
-      setLoading(true);
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUsers: User[] = [
-        { id: 1, name: 'Emma Wilson', role: 'Developer' },
-        { id: 2, name: 'James Chen', role: 'Designer' },
-        { id: 3, name: 'Sofia Rodriguez', role: 'Manager' }
-      ];
-      
-      setUsers(mockUsers);
-      setLoading(false);
-    };
+	useEffect(() => {
+		const fetchUsers = async (): Promise<void> => {
+			setLoading(true);
 
-    fetchUsers();
-  }, []);
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  if (loading) {
-    return <div className="loading">Loading users...</div>;
-  }
+			const mockUsers: User[] = [
+				{ id: 1, name: "Emma Wilson", role: "Developer" },
+				{ id: 2, name: "James Chen", role: "Designer" },
+				{ id: 3, name: "Sofia Rodriguez", role: "Manager" },
+			];
 
-  return (
-    <div className="user-list">
-      <h2>Team Members</h2>
-      <ul>
-        {users.map(user => (
-          <li key={user.id} className="user-item">
-            <strong>{user.name}</strong> - {user.role}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+			setUsers(mockUsers);
+			setLoading(false);
+		};
+
+		fetchUsers();
+	}, []);
+
+	if (loading) {
+		return <div className="loading">Loading users...</div>;
+	}
+
+	return (
+		<div className="user-list">
+			<h2>Team Members</h2>
+			<ul>
+				{users.map((user) => (
+					<li key={user.id} className="user-item">
+						<strong>{user.name}</strong> - {user.role}
+					</li>
+				))}
+			</ul>
+		</div>
+	);
 }
 
 export default UserList;
