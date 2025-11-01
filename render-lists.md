@@ -154,36 +154,38 @@ Always prefer unique identifiers over array indices for keys in dynamic
 lists.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
-type Task = {
-  id: string;
-  title: string;
-  completed: boolean;
+type User = {
+  id: number;
+  name: string;
+  age: number;
+  role: string;
 };
 
-function TaskList(): JSX.Element {
-  const tasks: Task[] = [
-    { id: "task-1", title: "Review pull requests", completed: false },
-    { id: "task-2", title: "Update documentation", completed: true },
-    { id: "task-3", title: "Fix bug in login", completed: false },
-    { id: "task-4", title: "Write unit tests", completed: true }
+function UserList(): JSX.Element {
+  const users: User[] = [
+    { id: 1, name: "Alice Johnson", age: 28, role: "Developer" },
+    { id: 2, name: "Bob Smith", age: 34, role: "Designer" },
+    { id: 3, name: "Carol Williams", age: 31, role: "Manager" },
+    { id: 4, name: "David Brown", age: 29, role: "Developer" },
   ];
-  
+
   return (
-    <ul>
-      {tasks.map((task) => (
-        <li key={task.id} style={{ 
-          textDecoration: task.completed ? 'line-through' : 'none' 
-        }}>
-          {task.title}
-        </li>
+    <div>
+      <h2>Team Members</h2>
+      {users.map((user) => (
+        <div key={user.id} className="user-card">
+          <h3>{user.name}</h3>
+          <p>Age: {user.age}</p>
+          <p>Role: {user.role}</p>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
 
-export default TaskList;
+export default UserList;
 ```
 
 This example uses string IDs (`"task-1"`, `"task-2"`, etc.) as keys, which is  
