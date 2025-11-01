@@ -61,7 +61,7 @@ identify elements. While using the array index works for static lists that
 won't change, it's not ideal for dynamic lists where items may be added,  
 removed, or reordered.  
 
----
+
 
 ## Rendering Array of Numbers
 
@@ -98,7 +98,7 @@ labels. The index is incremented by 1 to create human-friendly numbering
 starting from 1 instead of 0. For static score lists like this, using the  
 index as a key is acceptable since the list order won't change.  
 
----
+
 
 ## Rendering Array of Objects
 
@@ -146,7 +146,7 @@ sorted or filtered. Each object's properties are accessed using dot notation
 within the JSX. This pattern creates a card-like layout for each team member,  
 demonstrating how to structure repeated UI elements from data.  
 
----
+
 
 ## Using Unique IDs for Keys
 
@@ -156,36 +156,37 @@ lists.
 ```tsx
 import type { JSX } from "react";
 
-type User = {
-  id: number;
-  name: string;
-  age: number;
-  role: string;
+type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
 };
 
-function UserList(): JSX.Element {
-  const users: User[] = [
-    { id: 1, name: "Alice Johnson", age: 28, role: "Developer" },
-    { id: 2, name: "Bob Smith", age: 34, role: "Designer" },
-    { id: 3, name: "Carol Williams", age: 31, role: "Manager" },
-    { id: 4, name: "David Brown", age: 29, role: "Developer" },
+function TaskList(): JSX.Element {
+  const tasks: Task[] = [
+    { id: "task-1", title: "Review pull requests", completed: false },
+    { id: "task-2", title: "Update documentation", completed: true },
+    { id: "task-3", title: "Fix bug in login", completed: false },
+    { id: "task-4", title: "Write unit tests", completed: true },
   ];
 
   return (
-    <div>
-      <h2>Team Members</h2>
-      {users.map((user) => (
-        <div key={user.id} className="user-card">
-          <h3>{user.name}</h3>
-          <p>Age: {user.age}</p>
-          <p>Role: {user.role}</p>
-        </div>
+    <ul>
+      {tasks.map((task) => (
+        <li
+          key={task.id}
+          style={{
+            textDecoration: task.completed ? "line-through" : "none",
+          }}
+        >
+          {task.title}
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
-export default UserList;
+export default TaskList;
 ```
 
 This example uses string IDs (`"task-1"`, `"task-2"`, etc.) as keys, which is  
@@ -194,7 +195,6 @@ ensure React can correctly track each task even when the array order changes.
 Conditional styling shows completed tasks with strikethrough text,  
 demonstrating how to combine list rendering with dynamic styles.  
 
----
 
 ## Why Keys Matter - Virtual DOM Reconciliation
 
@@ -243,7 +243,7 @@ efficiently update the DOM positions. Without keys, or with index-based keys,
 React would unnecessarily recreate elements, losing any internal state and  
 causing performance issues.  
 
----
+
 
 ## Common Mistake - Using Index as Key in Dynamic Lists
 
@@ -289,7 +289,7 @@ elements instead of removing the correct one. This can lead to bugs with
 component state, animations, and form inputs. Always use stable, unique  
 identifiers for keys in lists that can change.  
 
----
+
 
 ## Extracting List Items into Components
 
@@ -347,7 +347,7 @@ This separation of concerns makes components more reusable and testable. The
 `ProductCard` receives the entire product object as a prop and handles its  
 own rendering logic.  
 
----
+
 
 ## Rendering Nested Lists
 
@@ -413,7 +413,7 @@ list maintains its own set of keys, which only need to be unique among
 siblings, not globally. This pattern is common for navigation menus,  
 organizational charts, and hierarchical data structures.  
 
----
+
 
 ## Filtering Lists Before Rendering
 
@@ -463,7 +463,7 @@ match the condition. A conditional check ensures appropriate messaging when
 the filtered list is empty. This approach keeps the JSX clean by separating  
 data transformation logic from rendering logic.  
 
----
+
 
 ## Sorting Lists Before Rendering
 
@@ -512,7 +512,7 @@ order (`b.grade - a.grade`). Notice that we still use `student.id` as the
 key, not the array index, because keys should identify the item itself, not  
 its position.  
 
----
+
 
 ## Rendering Lists with State
 
@@ -576,7 +576,7 @@ the new item while preserving existing ones. The `removeTodo` function
 filters out the item by ID. Using unique IDs as keys ensures React correctly  
 tracks items as they're added and removed.  
 
----
+
 
 ## Conditional Rendering Within Lists
 
@@ -637,7 +637,7 @@ status. The logical AND operator shows uptime only for online servers. This
 pattern is useful for dashboards, status pages, or any UI where items need  
 different visual treatments based on their state.  
 
----
+
 
 ## Rendering Empty State for Empty Lists
 
@@ -695,7 +695,7 @@ JSX based on whether messages exist. The empty state provides helpful context
 instead of leaving users confused by a blank screen. This pattern is  
 essential for good UX in applications with dynamic data.  
 
----
+
 
 ## Lists with Multiple Actions
 
@@ -748,7 +748,7 @@ functions in the onClick props capture the current item's data. This pattern
 is widely used in CRUD applications where each list item has view, edit, and  
 delete operations.  
 
----
+
 
 ## Rendering Lists from JSON Data
 
@@ -818,7 +818,7 @@ like ISBN numbers is common with external data. The rating display uses the
 visual representation. In real applications, this data would come from a  
 fetch call or state management system.  
 
----
+
 
 ## Lists with Checkboxes and Selection State
 
@@ -880,7 +880,7 @@ checks if its ID is in the `selectedIds` array. This pattern is common in
 file managers, email clients, and any interface requiring bulk actions on  
 multiple items.  
 
----
+
 
 ## Paginated Lists
 
@@ -948,7 +948,7 @@ page. Navigation buttons update the current page state, with disabled states
 preventing invalid navigation. This approach reduces initial render time and  
 improves scrolling performance for large lists.  
 
----
+
 
 ## Search and Filter Lists
 
@@ -1009,7 +1009,7 @@ with every keystroke, immediately showing matching results. This pattern
 provides instant feedback and is common in directory, product, and document  
 search interfaces.  
 
----
+
 
 ## Lists with Expand/Collapse State
 
@@ -1073,7 +1073,7 @@ individual expand/collapse functionality. The arrow symbol changes based on
 state, and additional details appear conditionally. This pattern is useful  
 for FAQs, file explorers, and any interface with collapsible sections.  
 
----
+
 
 ## Lists with Drag and Drop Ordering
 
