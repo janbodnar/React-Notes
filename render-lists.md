@@ -29,11 +29,6 @@ Key concepts when working with lists in React include:
 - **Reconciliation**: React's process of comparing the virtual DOM tree to  
   determine minimal DOM updates needed  
 
-This document provides 20 progressive examples demonstrating list rendering  
-concepts from basic array mapping to advanced patterns with nested lists,  
-helping you master this essential React feature.  
-
----
 
 ## Rendering Array of Strings
 
