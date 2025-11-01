@@ -36,18 +36,19 @@ The simplest form of list rendering transforms an array of strings into
 elements.  
 
 ```tsx
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: <just a test program> */
 import type { JSX } from "react";
 
 function FruitList(): JSX.Element {
-	const fruits: string[] = ["Apple", "Banana", "Orange", "Mango", "Pineapple"];
+  const fruits: string[] = ["Apple", "Banana", "Orange", "Mango", "Pineapple"];
 
-	return (
-		<ul>
-			{fruits.map((fruit, index) => (
-				<li key={index}>{fruit}</li>
-			))}
-		</ul>
-	);
+  return (
+    <ul>
+      {fruits.map((fruit, index) => (
+        <li key={index}>{fruit}</li>
+      ))}
+    </ul>
+  );
 }
 
 export default FruitList;
@@ -68,17 +69,20 @@ Numerical arrays can be rendered just like strings, useful for displaying
 data like scores or measurements.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function ScoreList(): JSX.Element {
   const scores: number[] = [95, 87, 92, 88, 91, 85, 90];
-  
+
   return (
     <div>
       <h2>Test Scores</h2>
       <ul>
         {scores.map((score, index) => (
-          <li key={index}>Student {index + 1}: {score}%</li>
+          // biome-ignore lint/suspicious/noArrayIndexKey: <test program>
+          <li key={index}>
+            Student {index + 1}: {score}%
+          </li>
         ))}
       </ul>
     </div>
