@@ -47,8 +47,10 @@ examples use React 19.2 with modern functional components and hooks.
 
 A basic functional component that renders a simple greeting.  
 
-```jsx
-function Hello() {
+```tsx
+import React from 'react';
+
+function Hello(): JSX.Element {
   return <h1>Hello there!</h1>;
 }
 
@@ -66,10 +68,12 @@ makes the component available for import in other files.
 
 A component demonstrating how to use JavaScript expressions within JSX.  
 
-```jsx
-function Greeting() {
-  const name = "React";
-  const version = "19.2";
+```tsx
+import React from 'react';
+
+function Greeting(): JSX.Element {
+  const name: string = "React";
+  const version: string = "19.2";
   
   return (
     <div>
@@ -93,8 +97,10 @@ the UI.
 
 Returning multiple elements using React Fragment to avoid extra DOM nodes.  
 
-```jsx
-function UserCard() {
+```tsx
+import React from 'react';
+
+function UserCard(): JSX.Element {
   return (
     <>
       <h2>John Smith</h2>
@@ -118,8 +124,15 @@ and avoiding unnecessary wrapper elements.
 
 Passing data to components using props for reusability.  
 
-```jsx
-function Welcome({ name, role }) {
+```tsx
+import React from 'react';
+
+type WelcomeProps = {
+  name: string;
+  role: string;
+};
+
+function Welcome({ name, role }: WelcomeProps): JSX.Element {
   return (
     <div>
       <h1>Hello, {name}!</h1>
@@ -142,8 +155,15 @@ data: `<Welcome name="Alice" role="Developer" />`.
 
 Setting default prop values for components.  
 
-```jsx
-function Button({ label = "Click Me", variant = "primary" }) {
+```tsx
+import React from 'react';
+
+type ButtonProps = {
+  label?: string;
+  variant?: 'primary' | 'secondary';
+};
+
+function Button({ label = "Click Me", variant = "primary" }: ButtonProps): JSX.Element {
   return (
     <button className={`btn btn-${variant}`}>
       {label}
@@ -165,8 +185,15 @@ more robust and easier to use.
 
 Using the special `children` prop to pass content between component tags.  
 
-```jsx
-function Card({ children, title }) {
+```tsx
+import React, { ReactNode } from 'react';
+
+type CardProps = {
+  children: ReactNode;
+  title: string;
+};
+
+function Card({ children, title }: CardProps): JSX.Element {
   return (
     <div className="card">
       <h3>{title}</h3>
@@ -191,8 +218,15 @@ creating wrapper or container components.
 
 Conditionally rendering content based on a condition.  
 
-```jsx
-function LoginStatus({ isLoggedIn, username }) {
+```tsx
+import React from 'react';
+
+type LoginStatusProps = {
+  isLoggedIn: boolean;
+  username: string;
+};
+
+function LoginStatus({ isLoggedIn, username }: LoginStatusProps): JSX.Element {
   return (
     <div>
       {isLoggedIn ? (
@@ -218,8 +252,15 @@ concise than using if-else statements outside the JSX.
 
 Using the logical AND operator for conditional rendering.  
 
-```jsx
-function Notification({ message, show }) {
+```tsx
+import React from 'react';
+
+type NotificationProps = {
+  message: string;
+  show: boolean;
+};
+
+function Notification({ message, show }: NotificationProps): JSX.Element {
   return (
     <div>
       {show && (
@@ -245,9 +286,11 @@ operator when there's no else condition.
 
 Rendering an array of items using the `map` function.  
 
-```jsx
-function FruitList() {
-  const fruits = ["Apple", "Banana", "Orange", "Mango", "Grape"];
+```tsx
+import React from 'react';
+
+function FruitList(): JSX.Element {
+  const fruits: string[] = ["Apple", "Banana", "Orange", "Mango", "Grape"];
   
   return (
     <ul>
@@ -272,9 +315,17 @@ works for static lists, it's better to use unique IDs for dynamic data.
 
 Mapping over an array of objects to render complex list items.  
 
-```jsx
-function UserList() {
-  const users = [
+```tsx
+import React from 'react';
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+function UserList(): JSX.Element {
+  const users: User[] = [
     { id: 1, name: "Alice Johnson", email: "alice@example.com" },
     { id: 2, name: "Bob Smith", email: "bob@example.com" },
     { id: 3, name: "Carol White", email: "carol@example.com" }
@@ -306,11 +357,11 @@ accessed using dot notation within the JSX.
 
 Managing component state with the `useState` hook.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function Counter() {
-  const [count, setCount] = useState(0);
+function Counter(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
   
   return (
     <div>
@@ -334,13 +385,13 @@ called, React re-renders the component with the new state.
 
 Using multiple `useState` hooks in a single component.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function UserProfile() {
-  const [name, setName] = useState("Guest");
-  const [age, setAge] = useState(0);
-  const [email, setEmail] = useState("");
+function UserProfile(): JSX.Element {
+  const [name, setName] = useState<string>("Guest");
+  const [age, setAge] = useState<number>(0);
+  const [email, setEmail] = useState<string>("");
   
   return (
     <div>
@@ -367,17 +418,23 @@ are unrelated.
 
 Managing object state and updating it immutably.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function PersonForm() {
-  const [person, setPerson] = useState({
+type Person = {
+  firstName: string;
+  lastName: string;
+  age: number;
+};
+
+function PersonForm(): JSX.Element {
+  const [person, setPerson] = useState<Person>({
     firstName: "",
     lastName: "",
     age: 0
   });
   
-  const updateFirstName = () => {
+  const updateFirstName = (): void => {
     setPerson({ ...person, firstName: "Alice" });
   };
   
@@ -403,13 +460,13 @@ updates, so mutating the existing object won't trigger a re-render.
 
 Managing array state and adding items immutably.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function TodoList() {
-  const [todos, setTodos] = useState(["Learn React", "Build a project"]);
+function TodoList(): JSX.Element {
+  const [todos, setTodos] = useState<string[]>(["Learn React", "Build a project"]);
   
-  const addTodo = () => {
+  const addTodo = (): void => {
     setTodos([...todos, "New task"]);
   };
   
@@ -439,13 +496,13 @@ methods like `push()`, `pop()`, or `splice()` directly on state arrays.
 
 Creating a boolean toggle with state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ToggleSwitch() {
-  const [isOn, setIsOn] = useState(false);
+function ToggleSwitch(): JSX.Element {
+  const [isOn, setIsOn] = useState<boolean>(false);
   
-  const toggle = () => {
+  const toggle = (): void => {
     setIsOn(!isOn);
   };
   
@@ -471,17 +528,17 @@ disabling features, or switching between two states. You could also use
 
 Using functional updates to ensure state consistency.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function AdvancedCounter() {
-  const [count, setCount] = useState(0);
+function AdvancedCounter(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
   
-  const increment = () => {
+  const increment = (): void => {
     setCount(prevCount => prevCount + 1);
   };
   
-  const incrementMultiple = () => {
+  const incrementMultiple = (): void => {
     setCount(prev => prev + 1);
     setCount(prev => prev + 1);
     setCount(prev => prev + 1);
@@ -510,13 +567,13 @@ function receives the previous state and returns the new state.
 
 Handling user input with controlled components.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function NameInput() {
-  const [name, setName] = useState("");
+function NameInput(): JSX.Element {
+  const [name, setName] = useState<string>("");
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setName(event.target.value);
   };
   
@@ -547,17 +604,23 @@ and makes it easy to validate or transform user input.
 
 Managing multiple controlled inputs in a form.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function ContactForm() {
-  const [formData, setFormData] = useState({
+type FormData = {
+  name: string;
+  email: string;
+  message: string;
+};
+
+function ContactForm(): JSX.Element {
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     message: ""
   });
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -600,22 +663,27 @@ many fields without creating separate handlers for each.
 
 Handling form submission and preventing default behavior.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function LoginForm() {
-  const [credentials, setCredentials] = useState({
+type Credentials = {
+  username: string;
+  password: string;
+};
+
+function LoginForm(): JSX.Element {
+  const [credentials, setCredentials] = useState<Credentials>({
     username: "",
     password: ""
   });
   
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     console.log("Logging in with:", credentials);
     // Add authentication logic here
   };
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setCredentials({ ...credentials, [name]: value });
   };
@@ -654,17 +722,17 @@ data as needed, such as sending it to an API or validating it.
 
 Handling click events with different patterns.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ClickHandler() {
-  const [message, setMessage] = useState("");
+function ClickHandler(): JSX.Element {
+  const [message, setMessage] = useState<string>("");
   
-  const handleClick = () => {
+  const handleClick = (): void => {
     setMessage("Button clicked!");
   };
   
-  const handleClickWithParam = (text) => {
+  const handleClickWithParam = (text: string): void => {
     setMessage(text);
   };
   
@@ -693,13 +761,13 @@ immediately during render instead of on click.
 
 Accessing event properties and target information.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, MouseEvent } from 'react';
 
-function EventInfo() {
-  const [info, setInfo] = useState("");
+function EventInfo(): JSX.Element {
+  const [info, setInfo] = useState<string>("");
   
-  const handleClick = (event) => {
+  const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
     const { type, clientX, clientY } = event;
     setInfo(`Event: ${type} at (${clientX}, ${clientY})`);
   };
@@ -727,13 +795,13 @@ to get detailed event information.
 
 Managing checkbox state in React.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function CheckboxExample() {
-  const [isChecked, setIsChecked] = useState(false);
+function CheckboxExample(): JSX.Element {
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setIsChecked(event.target.checked);
   };
   
@@ -766,13 +834,13 @@ React manages the checked state.
 
 Handling radio button groups with state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function RadioButtons() {
-  const [selected, setSelected] = useState("option1");
+function RadioButtons(): JSX.Element {
+  const [selected, setSelected] = useState<string>("option1");
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSelected(event.target.value);
   };
   
@@ -815,13 +883,13 @@ the state updates to that radio's value.
 
 Creating controlled select dropdowns.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function SelectExample() {
-  const [country, setCountry] = useState("usa");
+function SelectExample(): JSX.Element {
+  const [country, setCountry] = useState<string>("usa");
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setCountry(event.target.value);
   };
   
@@ -852,11 +920,11 @@ select's value prop.
 
 Using `useEffect` to run code after component renders.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function DocumentTitle() {
-  const [count, setCount] = useState(0);
+function DocumentTitle(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
   
   useEffect(() => {
     document.title = `Count: ${count}`;
@@ -884,12 +952,12 @@ you're working with the latest component state.
 
 Controlling when effects run with dependencies.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect, ChangeEvent } from 'react';
 
-function DataLogger() {
-  const [count, setCount] = useState(0);
-  const [name, setName] = useState("");
+function DataLogger(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
+  const [name, setName] = useState<string>("");
   
   useEffect(() => {
     console.log(`Count changed to: ${count}`);
@@ -901,7 +969,7 @@ function DataLogger() {
       <button onClick={() => setCount(count + 1)}>Increment</button>
       <input 
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
         placeholder="Name (won't log)"
       />
     </div>
@@ -923,11 +991,11 @@ effect uses.
 
 Cleaning up side effects to prevent memory leaks.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function Timer() {
-  const [seconds, setSeconds] = useState(0);
+function Timer(): JSX.Element {
+  const [seconds, setSeconds] = useState<number>(0);
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -956,18 +1024,23 @@ dependency array `[]` ensures the effect runs only once on mount.
 
 Loading data from an API using useEffect.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function UserData() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+type User = {
+  name: string;
+  email: string;
+};
+
+function UserData(): JSX.Element {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser = async (): Promise<void> => {
       try {
         const response = await fetch('/api/user');
-        const data = await response.json();
+        const data: User = await response.json();
         setUser(data);
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -1003,13 +1076,13 @@ accesses properties that might not exist while loading.
 
 Persisting state to localStorage.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function PersistentCounter() {
-  const [count, setCount] = useState(() => {
+function PersistentCounter(): JSX.Element {
+  const [count, setCount] = useState<number>(() => {
     const saved = localStorage.getItem('count');
-    return saved !== null ? parseInt(saved) : 0;
+    return saved !== null ? parseInt(saved, 10) : 0;
   });
   
   useEffect(() => {
@@ -1039,14 +1112,14 @@ the value exists before parsing to avoid errors.
 
 Adding and removing window event listeners.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function WindowSize() {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+function WindowSize(): JSX.Element {
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = (): void => {
       setWindowWidth(window.innerWidth);
     };
     
@@ -1074,12 +1147,12 @@ once on mount and removed on unmount.
 
 Running effects conditionally based on state.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect, ChangeEvent } from 'react';
 
-function SearchBox() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+function SearchBox(): JSX.Element {
+  const [query, setQuery] = useState<string>("");
+  const [results, setResults] = useState<string[]>([]);
   
   useEffect(() => {
     if (query.length >= 3) {
@@ -1099,7 +1172,7 @@ function SearchBox() {
     <div>
       <input 
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
         placeholder="Search (min 3 chars)"
       />
       <ul>
@@ -1125,12 +1198,24 @@ every query change but the search logic is conditional.
 
 Building larger components from smaller reusable ones.  
 
-```jsx
-function Avatar({ src, alt }) {
+```tsx
+import React from 'react';
+
+type AvatarProps = {
+  src: string;
+  alt: string;
+};
+
+function Avatar({ src, alt }: AvatarProps): JSX.Element {
   return <img src={src} alt={alt} className="avatar" />;
 }
 
-function UserInfo({ name, email }) {
+type UserInfoProps = {
+  name: string;
+  email: string;
+};
+
+function UserInfo({ name, email }: UserInfoProps): JSX.Element {
   return (
     <div>
       <h3>{name}</h3>
@@ -1139,7 +1224,15 @@ function UserInfo({ name, email }) {
   );
 }
 
-function UserProfile({ user }) {
+type UserProfileProps = {
+  user: {
+    avatarUrl: string;
+    name: string;
+    email: string;
+  };
+};
+
+function UserProfile({ user }: UserProfileProps): JSX.Element {
   return (
     <div className="profile">
       <Avatar src={user.avatarUrl} alt={user.name} />
@@ -1162,10 +1255,16 @@ more maintainable and the components more reusable.
 
 Sharing state between sibling components by lifting it to a common parent.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function TemperatureInput({ scale, temperature, onTemperatureChange }) {
+type TemperatureInputProps = {
+  scale: 'Celsius' | 'Fahrenheit';
+  temperature: string;
+  onTemperatureChange: (value: string) => void;
+};
+
+function TemperatureInput({ scale, temperature, onTemperatureChange }: TemperatureInputProps): JSX.Element {
   return (
     <input 
       value={temperature}
@@ -1175,16 +1274,16 @@ function TemperatureInput({ scale, temperature, onTemperatureChange }) {
   );
 }
 
-function Calculator() {
-  const [celsius, setCelsius] = useState("");
-  const [fahrenheit, setFahrenheit] = useState("");
+function Calculator(): JSX.Element {
+  const [celsius, setCelsius] = useState<string>("");
+  const [fahrenheit, setFahrenheit] = useState<string>("");
   
-  const handleCelsiusChange = (value) => {
+  const handleCelsiusChange = (value: string): void => {
     setCelsius(value);
     setFahrenheit(value ? (parseFloat(value) * 9/5 + 32).toFixed(1) : "");
   };
   
-  const handleFahrenheitChange = (value) => {
+  const handleFahrenheitChange = (value: string): void => {
     setFahrenheit(value);
     setCelsius(value ? ((parseFloat(value) - 32) * 5/9).toFixed(1) : "");
   };
@@ -1219,11 +1318,18 @@ and keeps both temperature inputs synchronized.
 
 Computing values from existing state instead of storing them separately.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ShoppingCart() {
-  const [items, setItems] = useState([
+type Item = {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
+function ShoppingCart(): JSX.Element {
+  const [items, setItems] = useState<Item[]>([
     { id: 1, name: "Book", price: 12.99, quantity: 2 },
     { id: 2, name: "Pen", price: 1.99, quantity: 5 }
   ]);
@@ -1261,16 +1367,21 @@ are automatically updated whenever the source state changes.
 
 Validating form inputs and displaying error messages.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 
-function RegistrationForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+type Errors = {
+  email?: string;
+  password?: string;
+};
+
+function RegistrationForm(): JSX.Element {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errors, setErrors] = useState<Errors>({});
   
-  const validate = () => {
-    const newErrors = {};
+  const validate = (): boolean => {
+    const newErrors: Errors = {};
     
     if (!email.includes('@')) {
       newErrors.email = "Invalid email address";
@@ -1284,7 +1395,7 @@ function RegistrationForm() {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (validate()) {
       console.log("Form is valid!");
@@ -1297,7 +1408,7 @@ function RegistrationForm() {
         <input 
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           placeholder="Email"
         />
         {errors.email && <p className="error">{errors.email}</p>}
@@ -1306,7 +1417,7 @@ function RegistrationForm() {
         <input 
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           placeholder="Password"
         />
         {errors.password && <p className="error">{errors.password}</p>}
@@ -1330,13 +1441,13 @@ messages conditionally next to each field using the `&&` operator.
 
 Applying dynamic styles based on state or props.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, CSSProperties } from 'react';
 
-function StyledButton() {
-  const [isActive, setIsActive] = useState(false);
+function StyledButton(): JSX.Element {
+  const [isActive, setIsActive] = useState<boolean>(false);
   
-  const buttonStyle = {
+  const buttonStyle: CSSProperties = {
     backgroundColor: isActive ? '#4CAF50' : '#f44336',
     color: 'white',
     padding: '10px 20px',
@@ -1370,13 +1481,15 @@ CSS classes are generally preferred for static styles.
 
 Dynamically applying CSS classes based on state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function Message() {
-  const [type, setType] = useState('info');
+type MessageType = 'info' | 'success' | 'warning' | 'error';
+
+function Message(): JSX.Element {
+  const [type, setType] = useState<MessageType>('info');
   
-  const getClassName = () => {
+  const getClassName = (): string => {
     return `message message-${type}`;
   };
   
@@ -1406,13 +1519,13 @@ state, enabling dynamic styling while keeping styles in CSS files.
 
 Managing hover state for interactive elements.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, CSSProperties } from 'react';
 
-function HoverCard() {
-  const [isHovered, setIsHovered] = useState(false);
+function HoverCard(): JSX.Element {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   
-  const cardStyle = {
+  const cardStyle: CSSProperties = {
     padding: '20px',
     border: '2px solid',
     borderColor: isHovered ? '#2196F3' : '#ccc',
@@ -1447,15 +1560,22 @@ useful for creating interactive hover effects that go beyond what CSS
 
 Creating a reusable modal dialog component.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ReactNode, MouseEvent } from 'react';
 
-function Modal({ isOpen, onClose, title, children }) {
+type ModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+};
+
+function Modal({ isOpen, onClose, title, children }: ModalProps): JSX.Element | null {
   if (!isOpen) return null;
   
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e: MouseEvent) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>{title}</h2>
           <button onClick={onClose}>×</button>
@@ -1468,8 +1588,8 @@ function Modal({ isOpen, onClose, title, children }) {
   );
 }
 
-function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+function App(): JSX.Element {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   return (
     <div>
@@ -1499,10 +1619,17 @@ The parent component controls when the modal is visible via state.
 
 Building an expandable accordion component.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ReactNode } from 'react';
 
-function AccordionItem({ title, children, isOpen, onToggle }) {
+type AccordionItemProps = {
+  title: string;
+  children: ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
+};
+
+function AccordionItem({ title, children, isOpen, onToggle }: AccordionItemProps): JSX.Element {
   return (
     <div className="accordion-item">
       <div className="accordion-header" onClick={onToggle}>
@@ -1518,8 +1645,8 @@ function AccordionItem({ title, children, isOpen, onToggle }) {
   );
 }
 
-function Accordion() {
-  const [openIndex, setOpenIndex] = useState(null);
+function Accordion(): JSX.Element {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   
   const sections = [
     { title: "Section 1", content: "Content for section 1" },
@@ -1557,11 +1684,20 @@ ensures only one section is open at a time.
 
 Creating a tabbed interface component.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ReactNode } from 'react';
 
-function Tabs({ tabs }) {
-  const [activeTab, setActiveTab] = useState(0);
+type Tab = {
+  label: string;
+  content: ReactNode;
+};
+
+type TabsProps = {
+  tabs: Tab[];
+};
+
+function Tabs({ tabs }: TabsProps): JSX.Element {
+  const [activeTab, setActiveTab] = useState<number>(0);
   
   return (
     <div className="tabs">
@@ -1583,8 +1719,8 @@ function Tabs({ tabs }) {
   );
 }
 
-function App() {
-  const tabs = [
+function App(): JSX.Element {
+  const tabs: Tab[] = [
     { label: "Home", content: <div>Home content</div> },
     { label: "Profile", content: <div>Profile content</div> },
     { label: "Settings", content: <div>Settings content</div> }
@@ -1607,17 +1743,27 @@ configurations to create various tabbed interfaces.
 
 Implementing a dropdown menu with click-outside-to-close functionality.  
 
-```jsx
-import { useState, useEffect, useRef } from 'react';
+```tsx
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
 
-function Dropdown({ trigger, items }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+type DropdownItem = {
+  label: string;
+  onClick: () => void;
+};
+
+type DropdownProps = {
+  trigger: ReactNode;
+  items: DropdownItem[];
+};
+
+function Dropdown({ trigger, items }: DropdownProps): JSX.Element {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownRef.current && 
-          !dropdownRef.current.contains(event.target)) {
+          !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -1667,11 +1813,16 @@ dropdown. This pattern is common for dismissible overlays and menus.
 
 Creating a pagination control for lists.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function Pagination({ items, itemsPerPage }) {
-  const [currentPage, setCurrentPage] = useState(1);
+type PaginationProps<T> = {
+  items: T[];
+  itemsPerPage: number;
+};
+
+function Pagination<T>({ items, itemsPerPage }: PaginationProps<T>): JSX.Element {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -1718,13 +1869,13 @@ provide visual feedback when at the first or last page.
 
 Filtering a list based on search input.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function SearchFilter() {
-  const [searchTerm, setSearchTerm] = useState("");
+function SearchFilter(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   
-  const allItems = [
+  const allItems: string[] = [
     "Apple", "Banana", "Cherry", "Date", "Elderberry",
     "Fig", "Grape", "Honeydew", "Kiwi", "Lemon"
   ];
@@ -1738,7 +1889,7 @@ function SearchFilter() {
       <input 
         type="text"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
         placeholder="Search fruits..."
       />
       <ul>
@@ -1765,13 +1916,21 @@ filtered array updates automatically whenever the search term changes.
 
 Implementing sortable lists with different criteria.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function SortableList() {
-  const [sortOrder, setSortOrder] = useState('asc');
+type User = {
+  id: number;
+  name: string;
+  age: number;
+};
+
+type SortOrder = 'asc' | 'desc';
+
+function SortableList(): JSX.Element {
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   
-  const users = [
+  const users: User[] = [
     { id: 1, name: "Charlie", age: 35 },
     { id: 2, name: "Alice", age: 28 },
     { id: 3, name: "Bob", age: 42 }
@@ -1813,12 +1972,12 @@ descending order by reversing the comparison logic based on state.
 
 Implementing search with debouncing to reduce API calls.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect, ChangeEvent } from 'react';
 
-function DebouncedSearch() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedTerm, setDebouncedTerm] = useState("");
+function DebouncedSearch(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [debouncedTerm, setDebouncedTerm] = useState<string>("");
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1842,7 +2001,7 @@ function DebouncedSearch() {
       <input 
         type="text"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
         placeholder="Search (debounced)..."
       />
       <p>Searching for: {debouncedTerm}</p>
@@ -1865,27 +2024,33 @@ changes, reducing API calls dramatically.
 
 Managing loading, error, and success states for async operations.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function DataFetcher() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+type Data = {
+  message: string;
+};
+
+function DataFetcher(): JSX.Element {
+  const [data, setData] = useState<Data | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
         setLoading(true);
         setError(null);
         
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
-        const result = { message: "Data loaded successfully!" };
+        const result: Data = { message: "Data loaded successfully!" };
         
         setData(result);
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -1915,32 +2080,36 @@ succeeds or fails.
 
 Creating a custom hook to manage form state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function useForm(initialValues) {
-  const [values, setValues] = useState(initialValues);
+type FormValues = {
+  [key: string]: string;
+};
+
+function useForm(initialValues: FormValues) {
+  const [values, setValues] = useState<FormValues>(initialValues);
   
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = event.target;
     setValues(prev => ({ ...prev, [name]: value }));
   };
   
-  const resetForm = () => {
+  const resetForm = (): void => {
     setValues(initialValues);
   };
   
   return { values, handleChange, resetForm };
 }
 
-function ContactForm() {
+function ContactForm(): JSX.Element {
   const { values, handleChange, resetForm } = useForm({
     name: "",
     email: "",
     message: ""
   });
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log("Submitted:", values);
     resetForm();
@@ -1972,11 +2141,11 @@ forms.
 
 Creating a hook that syncs state with localStorage.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
-function useLocalStorage(key, initialValue) {
-  const [storedValue, setStoredValue] = useState(() => {
+function useLocalStorage<T>(key: string, initialValue: T): [T, Dispatch<SetStateAction<T>>] {
+  const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
@@ -1986,11 +2155,9 @@ function useLocalStorage(key, initialValue) {
     }
   });
   
-  const setValue = (value) => {
+  const setValue: Dispatch<SetStateAction<T>> = (value) => {
     try {
-      const valueToStore = value instanceof Function 
-        ? value(storedValue) 
-        : value;
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
@@ -2001,14 +2168,14 @@ function useLocalStorage(key, initialValue) {
   return [storedValue, setValue];
 }
 
-function App() {
-  const [name, setName] = useLocalStorage('name', '');
+function App(): JSX.Element {
+  const [name, setName] = useLocalStorage<string>('name', '');
   
   return (
     <div>
       <input 
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
         placeholder="Your name (persisted)"
       />
       <p>Hello, {name}!</p>
@@ -2031,19 +2198,23 @@ clean API for persistent state.
 
 Demonstrating error handling patterns in React components.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ErrorProneComponent({ shouldError }) {
+type ErrorProneProps = {
+  shouldError: boolean;
+};
+
+function ErrorProneComponent({ shouldError }: ErrorProneProps): JSX.Element {
   if (shouldError) {
     throw new Error("Component crashed!");
   }
   return <div>Component is working fine</div>;
 }
 
-function SafeComponent() {
-  const [hasError, setHasError] = useState(false);
-  const [showError, setShowError] = useState(false);
+function SafeComponent(): JSX.Element {
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
   
   if (hasError) {
     return (
@@ -2054,7 +2225,7 @@ function SafeComponent() {
     );
   }
   
-  const handleClick = () => {
+  const handleClick = (): void => {
     try {
       setShowError(true);
     } catch (error) {
@@ -2085,24 +2256,24 @@ a component errors.
 
 Comparing controlled and uncontrolled input approaches.  
 
-```jsx
-import { useState, useRef } from 'react';
+```tsx
+import React, { useState, useRef, FormEvent, ChangeEvent } from 'react';
 
-function InputComparison() {
+function InputComparison(): JSX.Element {
   // Controlled input
-  const [controlledValue, setControlledValue] = useState("");
+  const [controlledValue, setControlledValue] = useState<string>("");
   
   // Uncontrolled input
-  const uncontrolledRef = useRef(null);
+  const uncontrolledRef = useRef<HTMLInputElement>(null);
   
-  const handleControlledSubmit = (e) => {
+  const handleControlledSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log("Controlled value:", controlledValue);
   };
   
-  const handleUncontrolledSubmit = (e) => {
+  const handleUncontrolledSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log("Uncontrolled value:", uncontrolledRef.current.value);
+    console.log("Uncontrolled value:", uncontrolledRef.current?.value);
   };
   
   return (
@@ -2111,7 +2282,7 @@ function InputComparison() {
         <h3>Controlled Input</h3>
         <input 
           value={controlledValue}
-          onChange={(e) => setControlledValue(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setControlledValue(e.target.value)}
         />
         <button type="submit">Submit</button>
       </form>
@@ -2140,10 +2311,17 @@ predictability and testing advantages.
 
 Demonstrating prop drilling and motivating the need for context.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, Dispatch, SetStateAction } from 'react';
 
-function Grandchild({ theme, setTheme }) {
+type Theme = 'light' | 'dark';
+
+type GrandchildProps = {
+  theme: Theme;
+  setTheme: Dispatch<SetStateAction<Theme>>;
+};
+
+function Grandchild({ theme, setTheme }: GrandchildProps): JSX.Element {
   return (
     <div>
       <p>Current theme: {theme}</p>
@@ -2154,12 +2332,17 @@ function Grandchild({ theme, setTheme }) {
   );
 }
 
-function Child({ theme, setTheme }) {
+type ChildProps = {
+  theme: Theme;
+  setTheme: Dispatch<SetStateAction<Theme>>;
+};
+
+function Child({ theme, setTheme }: ChildProps): JSX.Element {
   return <Grandchild theme={theme} setTheme={setTheme} />;
 }
 
-function Parent() {
-  const [theme, setTheme] = useState('light');
+function Parent(): JSX.Element {
+  const [theme, setTheme] = useState<Theme>('light');
   
   return (
     <div className={`app ${theme}`}>

@@ -44,8 +44,10 @@ React feature.
 
 Creating a simple JSX element is the foundation of React development.  
 
-```jsx
-function BasicElement() {
+```tsx
+import React from 'react';
+
+function BasicElement(): JSX.Element {
   return <div>Hello there!</div>;
 }
 ```
@@ -62,10 +64,12 @@ returned directly without quotes, distinguishing JSX from strings.
 
 JSX allows you to embed JavaScript expressions using curly braces.  
 
-```jsx
-function ExpressionExample() {
-  const name = "React Developer";
-  const age = 25;
+```tsx
+import React from 'react';
+
+function ExpressionExample(): JSX.Element {
+  const name: string = "React Developer";
+  const age: number = 25;
   
   return (
     <div>
@@ -90,10 +94,12 @@ interfaces.
 
 JSX elements can have attributes similar to HTML, but with some differences.  
 
-```jsx
-function AttributeExample() {
-  const imageUrl = "https://via.placeholder.com/150";
-  const altText = "Placeholder image";
+```tsx
+import React from 'react';
+
+function AttributeExample(): JSX.Element {
+  const imageUrl: string = "https://via.placeholder.com/150";
+  const altText: string = "Placeholder image";
   
   return (
     <img 
@@ -119,8 +125,10 @@ expression attributes (`src`, `alt`).
 
 When returning multiple elements, use React Fragments to avoid extra DOM nodes.  
 
-```jsx
-function FragmentExample() {
+```tsx
+import React from 'react';
+
+function FragmentExample(): JSX.Element {
   return (
     <>
       <h1>Main Title</h1>
@@ -144,9 +152,11 @@ working with CSS Grid and Flexbox layouts.
 
 JSX supports conditional rendering using JavaScript's ternary operator.  
 
-```jsx
-function ConditionalExample() {
-  const isLoggedIn = true;
+```tsx
+import React from 'react';
+
+function ConditionalExample(): JSX.Element {
+  const isLoggedIn: boolean = true;
   
   return (
     <div>
@@ -173,10 +183,12 @@ multi-line content.
 
 Use the logical AND operator for simpler conditional rendering.  
 
-```jsx
-function LogicalAndExample() {
-  const hasNotifications = true;
-  const notificationCount = 5;
+```tsx
+import React from 'react';
+
+function LogicalAndExample(): JSX.Element {
+  const hasNotifications: boolean = true;
+  const notificationCount: number = 5;
   
   return (
     <div>
@@ -202,9 +214,11 @@ conversions when necessary.
 
 Transform arrays into lists of JSX elements using the map() method.  
 
-```jsx
-function ArrayMapExample() {
-  const fruits = ["Apple", "Banana", "Orange", "Mango"];
+```tsx
+import React from 'react';
+
+function ArrayMapExample(): JSX.Element {
+  const fruits: string[] = ["Apple", "Banana", "Orange", "Mango"];
   
   return (
     <ul>
@@ -229,9 +243,17 @@ prevents subtle bugs when lists are modified.
 
 Render data from arrays of objects with multiple properties.  
 
-```jsx
-function ComplexObjectExample() {
-  const users = [
+```tsx
+import React from 'react';
+
+type User = {
+  id: number;
+  name: string;
+  role: string;
+};
+
+function ComplexObjectExample(): JSX.Element {
+  const users: User[] = [
     { id: 1, name: "Alice Johnson", role: "Developer" },
     { id: 2, name: "Bob Smith", role: "Designer" },
     { id: 3, name: "Carol White", role: "Manager" }
@@ -262,13 +284,15 @@ combining multiple JSX elements within each mapped iteration.
 
 JSX makes it easy to attach event handlers to elements.  
 
-```jsx
-function EventHandlingExample() {
-  const handleClick = () => {
+```tsx
+import React, { ChangeEvent } from 'react';
+
+function EventHandlingExample(): JSX.Element {
+  const handleClick = (): void => {
     console.log("Button clicked!");
   };
   
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     console.log("Input value:", event.target.value);
   };
   
@@ -294,14 +318,16 @@ providing cross-browser consistency. Access DOM values through
 
 Define event handlers directly within JSX for simple operations.  
 
-```jsx
-function InlineEventExample() {
+```tsx
+import React, { MouseEvent } from 'react';
+
+function InlineEventExample(): JSX.Element {
   return (
     <div>
       <button onClick={() => console.log("Inline handler executed")}>
         Quick Action
       </button>
-      <button onClick={(e) => {
+      <button onClick={(e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         console.log("Event prevented");
       }}>
@@ -325,9 +351,11 @@ functions.
 
 Apply styles directly to JSX elements using JavaScript objects.  
 
-```jsx
-function InlineStyleExample() {
-  const containerStyle = {
+```tsx
+import React, { CSSProperties } from 'react';
+
+function InlineStyleExample(): JSX.Element {
+  const containerStyle: CSSProperties = {
     backgroundColor: "#f0f0f0",
     padding: "20px",
     borderRadius: "8px"
@@ -354,12 +382,14 @@ static styles and better performance.
 
 Use className to apply CSS classes to JSX elements.  
 
-```jsx
-function ClassNameExample() {
-  const isActive = true;
-  const isPrimary = false;
+```tsx
+import React from 'react';
+
+function ClassNameExample(): JSX.Element {
+  const isActive: boolean = true;
+  const isPrimary: boolean = false;
   
-  const buttonClass = `btn ${isActive ? 'active' : ''} ${isPrimary ? 'primary' : 'secondary'}`;
+  const buttonClass: string = `btn ${isActive ? 'active' : ''} ${isPrimary ? 'primary' : 'secondary'}`;
   
   return (
     <div className="container">
@@ -382,12 +412,23 @@ management.
 
 Compose components by nesting them within each other.  
 
-```jsx
-function Avatar({ name }) {
+```tsx
+import React from 'react';
+
+type AvatarProps = {
+  name: string;
+};
+
+function Avatar({ name }: AvatarProps): JSX.Element {
   return <div className="avatar">{name.charAt(0)}</div>;
 }
 
-function UserCard({ name, email }) {
+type UserCardProps = {
+  name: string;
+  email: string;
+};
+
+function UserCard({ name, email }: UserCardProps): JSX.Element {
   return (
     <div className="card">
       <Avatar name={name} />
@@ -397,7 +438,7 @@ function UserCard({ name, email }) {
   );
 }
 
-function NestedComponentExample() {
+function NestedComponentExample(): JSX.Element {
   return (
     <div>
       <UserCard name="Jane Doe" email="jane@example.com" />
@@ -419,8 +460,15 @@ complex UIs are built from smaller, reusable pieces.
 
 Components can render content passed between opening and closing tags.  
 
-```jsx
-function Card({ children, title }) {
+```tsx
+import React, { ReactNode } from 'react';
+
+type CardProps = {
+  children: ReactNode;
+  title: string;
+};
+
+function Card({ children, title }: CardProps): JSX.Element {
   return (
     <div className="card">
       <h2>{title}</h2>
@@ -431,7 +479,7 @@ function Card({ children, title }) {
   );
 }
 
-function ChildrenExample() {
+function ChildrenExample(): JSX.Element {
   return (
     <Card title="User Profile">
       <p>Name: Alice Johnson</p>
@@ -454,9 +502,17 @@ content. Children can be text, elements, components, or any valid JSX.
 
 Combine conditional logic with list rendering for dynamic UIs.  
 
-```jsx
-function ConditionalListExample() {
-  const tasks = [
+```tsx
+import React from 'react';
+
+type Task = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
+
+function ConditionalListExample(): JSX.Element {
+  const tasks: Task[] = [
     { id: 1, text: "Review code", completed: true },
     { id: 2, text: "Write tests", completed: false },
     { id: 3, text: "Update docs", completed: false }
@@ -493,8 +549,10 @@ common in real applications for displaying filtered or search results.
 
 Add comments within JSX using JavaScript comment syntax.  
 
-```jsx
-function CommentsExample() {
+```tsx
+import React from 'react';
+
+function CommentsExample(): JSX.Element {
   return (
     <div>
       {/* This is a JSX comment */}
@@ -529,8 +587,17 @@ development.
 
 Use the spread operator to pass multiple props efficiently.  
 
-```jsx
-function UserInfo({ name, email, age, location }) {
+```tsx
+import React from 'react';
+
+type UserInfoProps = {
+  name: string;
+  email: string;
+  age: number;
+  location: string;
+};
+
+function UserInfo({ name, email, age, location }: UserInfoProps): JSX.Element {
   return (
     <div>
       <p>Name: {name}</p>
@@ -541,8 +608,8 @@ function UserInfo({ name, email, age, location }) {
   );
 }
 
-function SpreadPropsExample() {
-  const userDetails = {
+function SpreadPropsExample(): JSX.Element {
+  const userDetails: UserInfoProps = {
     name: "Sarah Connor",
     email: "sarah@example.com",
     age: 30,
@@ -565,8 +632,16 @@ especially useful when passing data from APIs or state management.
 
 Override or add props when using the spread operator.  
 
-```jsx
-function Button({ variant = "default", size = "medium", children, ...rest }) {
+```tsx
+import React, { ReactNode, ButtonHTMLAttributes } from 'react';
+
+type ButtonProps = {
+  variant?: 'default' | 'primary' | 'secondary';
+  size?: 'small' | 'medium' | 'large';
+  children: ReactNode;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+function Button({ variant = "default", size = "medium", children, ...rest }: ButtonProps): JSX.Element {
   const className = `btn btn-${variant} btn-${size}`;
   
   return (
@@ -576,7 +651,7 @@ function Button({ variant = "default", size = "medium", children, ...rest }) {
   );
 }
 
-function CombinedPropsExample() {
+function CombinedPropsExample(): JSX.Element {
   const baseProps = {
     type: "button",
     "aria-label": "Submit form"
@@ -603,10 +678,12 @@ custom functionality.
 
 Handle boolean attributes with shorthand syntax.  
 
-```jsx
-function BooleanAttributeExample() {
-  const isRequired = true;
-  const isDisabled = false;
+```tsx
+import React from 'react';
+
+function BooleanAttributeExample(): JSX.Element {
+  const isRequired: boolean = true;
+  const isDisabled: boolean = false;
   
   return (
     <form>
@@ -640,9 +717,17 @@ including static true values, expressions, and conditional logic.
 
 Use explicit Fragment syntax when you need to add keys to fragments.  
 
-```jsx
-function FragmentWithKeysExample() {
-  const glossary = [
+```tsx
+import React from 'react';
+
+type GlossaryItem = {
+  id: number;
+  term: string;
+  definition: string;
+};
+
+function FragmentWithKeysExample(): JSX.Element {
+  const glossary: GlossaryItem[] = [
     { id: 1, term: "JSX", definition: "JavaScript XML syntax extension" },
     { id: 2, term: "Props", definition: "Component properties" },
     { id: 3, term: "State", definition: "Component data that changes" }
@@ -673,8 +758,10 @@ multiple sibling elements per array item without wrapper divs.
 
 Understand how JSX handles null, undefined, and other falsy values.  
 
-```jsx
-function NullRenderingExample() {
+```tsx
+import React from 'react';
+
+function NullRenderingExample(): JSX.Element {
   const nullValue = null;
   const undefinedValue = undefined;
   const falseValue = false;
@@ -705,14 +792,21 @@ for conditional rendering—using `&&` with numbers might unexpectedly display
 
 Render different HTML elements based on variables.  
 
-```jsx
-function DynamicTagExample({ level = 1, children }) {
-  const Tag = `h${level}`;
+```tsx
+import React, { ReactNode } from 'react';
+
+type DynamicTagProps = {
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  children: ReactNode;
+};
+
+function DynamicTagExample({ level = 1, children }: DynamicTagProps): JSX.Element {
+  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   
   return <Tag>{children}</Tag>;
 }
 
-function DynamicTagsDemo() {
+function DynamicTagsDemo(): JSX.Element {
   return (
     <div>
       <DynamicTagExample level={1}>Main Heading</DynamicTagExample>
@@ -735,14 +829,14 @@ links, or different container types based on context.
 
 Manage form inputs using React state and controlled components.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function InputHandlingExample() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+function InputHandlingExample(): JSX.Element {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log({ name, email });
   };
@@ -752,13 +846,13 @@ function InputHandlingExample() {
       <input
         type="text"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
         placeholder="Name"
       />
       <input
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
         placeholder="Email"
       />
       <button type="submit">Submit</button>
@@ -779,12 +873,12 @@ prevents default submission and processes the data in JavaScript.
 
 Handle checkbox and radio button inputs with proper JSX syntax.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function CheckboxRadioExample() {
-  const [agreed, setAgreed] = useState(false);
-  const [color, setColor] = useState("blue");
+function CheckboxRadioExample(): JSX.Element {
+  const [agreed, setAgreed] = useState<boolean>(false);
+  const [color, setColor] = useState<string>("blue");
   
   return (
     <div>
@@ -792,7 +886,7 @@ function CheckboxRadioExample() {
         <input
           type="checkbox"
           checked={agreed}
-          onChange={(e) => setAgreed(e.target.checked)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setAgreed(e.target.checked)}
         />
         I agree to terms
       </label>
@@ -804,7 +898,7 @@ function CheckboxRadioExample() {
               type="radio"
               value={c}
               checked={color === c}
-              onChange={(e) => setColor(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setColor(e.target.value)}
             />
             {c}
           </label>
@@ -827,13 +921,18 @@ inputs identifies which option is selected.
 
 Create dropdown selects with JSX and state management.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function SelectExample() {
-  const [country, setCountry] = useState("usa");
+type Country = {
+  code: string;
+  name: string;
+};
+
+function SelectExample(): JSX.Element {
+  const [country, setCountry] = useState<string>("usa");
   
-  const countries = [
+  const countries: Country[] = [
     { code: "usa", name: "United States" },
     { code: "uk", name: "United Kingdom" },
     { code: "canada", name: "Canada" }
@@ -841,7 +940,7 @@ function SelectExample() {
   
   return (
     <div>
-      <select value={country} onChange={(e) => setCountry(e.target.value)}>
+      <select value={country} onChange={(e: ChangeEvent<HTMLSelectElement>) => setCountry(e.target.value)}>
         {countries.map((c) => (
           <option key={c.code} value={c.code}>
             {c.name}
@@ -866,18 +965,18 @@ option needs a unique `key` prop when generated from an array.
 
 Handle multi-line text input using the textarea element.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function TextareaExample() {
-  const [message, setMessage] = useState("");
+function TextareaExample(): JSX.Element {
+  const [message, setMessage] = useState<string>("");
   const maxLength = 200;
   
   return (
     <div>
       <textarea
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
         placeholder="Enter your message"
         rows={5}
         maxLength={maxLength}
@@ -900,13 +999,15 @@ real-time character count feedback, a common UX pattern for text inputs.
 
 Render raw HTML content with proper sanitization awareness.  
 
-```jsx
-function DangerouslySetInnerHTMLExample() {
+```tsx
+import React from 'react';
+
+function DangerouslySetInnerHTMLExample(): JSX.Element {
   const htmlContent = {
     __html: "<strong>Bold text</strong> and <em>italic text</em>"
   };
   
-  const userContent = "<script>alert('XSS')</script>";
+  const userContent: string = "<script>alert('XSS')</script>";
   
   return (
     <div>
@@ -933,14 +1034,19 @@ HTML before rendering.
 
 Use portals to render components outside the normal DOM hierarchy.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ReactNode, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 
-function Modal({ children, onClose }) {
+type ModalProps = {
+  children: ReactNode;
+  onClose: () => void;
+};
+
+function Modal({ children, onClose }: ModalProps): React.ReactPortal {
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e: MouseEvent) => e.stopPropagation()}>
         {children}
         <button onClick={onClose}>Close</button>
       </div>
@@ -949,8 +1055,8 @@ function Modal({ children, onClose }) {
   );
 }
 
-function PortalExample() {
-  const [showModal, setShowModal] = useState(false);
+function PortalExample(): JSX.Element {
+  const [showModal, setShowModal] = useState<boolean>(false);
   
   return (
     <div>
@@ -978,37 +1084,45 @@ through the React tree, not the DOM tree, preserving expected behavior.
 
 Implement error boundaries to gracefully handle component errors.  
 
-```jsx
-import React from 'react';
+```tsx
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-  
-  static getDerivedStateFromError(error) {
+interface Props {
+  children: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false
+  };
+
+  public static getDerivedStateFromError(_: Error): State {
     return { hasError: true };
   }
-  
-  componentDidCatch(error, errorInfo) {
-    console.log('Error caught:', error, errorInfo);
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
   }
-  
-  render() {
+
+  public render() {
     if (this.state.hasError) {
       return <h1>Something went wrong.</h1>;
     }
-    
+
     return this.props.children;
   }
 }
 
-function BuggyComponent() {
+
+function BuggyComponent(): JSX.Element {
   throw new Error("Component crashed!");
 }
 
-function ErrorBoundaryExample() {
+function ErrorBoundaryExample(): JSX.Element {
   return (
     <ErrorBoundary>
       <BuggyComponent />
@@ -1030,12 +1144,12 @@ improve app resilience.
 
 Use React.lazy and Suspense for code splitting with JSX.  
 
-```jsx
-import { lazy, Suspense } from 'react';
+```tsx
+import React, { lazy, Suspense } from 'react';
 
 const HeavyComponent = lazy(() => import('./HeavyComponent'));
 
-function LazyLoadingExample() {
+function LazyLoadingExample(): JSX.Element {
   return (
     <div>
       <h1>Main Content</h1>
@@ -1061,20 +1175,22 @@ when needed.
 
 Access DOM nodes directly using refs in JSX.  
 
-```jsx
-import { useRef, useEffect } from 'react';
+```tsx
+import React, { useRef, useEffect } from 'react';
 
-function RefExample() {
-  const inputRef = useRef(null);
-  const divRef = useRef(null);
+function RefExample(): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const divRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    inputRef.current.focus();
-    console.log('Div height:', divRef.current.offsetHeight);
+    inputRef.current?.focus();
+    console.log('Div height:', divRef.current?.offsetHeight);
   }, []);
   
-  const scrollToTop = () => {
-    divRef.current.scrollTop = 0;
+  const scrollToTop = (): void => {
+    if (divRef.current) {
+      divRef.current.scrollTop = 0;
+    }
   };
   
   return (

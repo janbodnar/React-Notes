@@ -160,8 +160,10 @@ functional components and React 19.2 features.
 This example shows the simplest React component—a functional component that  
 returns JSX to display static content.  
 
-```jsx
-function Welcome() {
+```tsx
+import React from 'react';
+
+function Welcome(): JSX.Element {
   return (
     <div className="welcome-container">
       <h1>Welcome to React</h1>
@@ -185,8 +187,15 @@ look like, and React handles the rendering.
 Props allow components to receive data from their parents, making them  
 reusable and configurable.  
 
-```jsx
-function Greeting({ name, message }) {
+```tsx
+import React from 'react';
+
+type GreetingProps = {
+  name: string;
+  message: string;
+};
+
+function Greeting({ name, message }: GreetingProps): JSX.Element {
   return (
     <div className="greeting-card">
       <h2>Hello, {name}!</h2>
@@ -195,7 +204,7 @@ function Greeting({ name, message }) {
   );
 }
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <Greeting 
@@ -225,15 +234,15 @@ reusability is a core strength of React's component-based architecture.
 The `useState` hook enables functional components to manage internal state  
 that persists across re-renders.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function Counter() {
-  const [count, setCount] = useState(0);
+function Counter(): JSX.Element {
+  const [count, setCount] = useState<number>(0);
 
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
-  const reset = () => setCount(0);
+  const increment = (): void => setCount(count + 1);
+  const decrement = (): void => setCount(count - 1);
+  const reset = (): void => setCount(0);
 
   return (
     <div className="counter-container">
@@ -263,16 +272,21 @@ makes components interactive and responsive to user actions.
 This example shows controlled components—form inputs whose values are  
 controlled by React state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 
-function UserForm() {
-  const [formData, setFormData] = useState({
+type FormData = {
+  username: string;
+  email: string;
+};
+
+function UserForm(): JSX.Element {
+  const [formData, setFormData] = useState<FormData>({
     username: '',
     email: ''
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
@@ -280,7 +294,7 @@ function UserForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     alert(`Username: ${formData.username}, Email: ${formData.email}`);
@@ -330,23 +344,26 @@ validation, conditional rendering, and complex form logic.
 The `useEffect` hook handles side effects like data fetching, demonstrating  
 how React components interact with external APIs.  
 
-```jsx
-import { useState, useEffect } from 'react';
+```tsx
+import React, { useState, useEffect } from 'react';
 
-function UserList() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+type User = {
+  id: number;
+  name: string;
+  role: string;
+};
+
+function UserList(): JSX.Element {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Simulating API call with local data
-    const fetchUsers = async () => {
+    const fetchUsers = async (): Promise<void> => {
       setLoading(true);
       
-      // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Local data instead of external API
-      const mockUsers = [
+      const mockUsers: User[] = [
         { id: 1, name: 'Emma Wilson', role: 'Developer' },
         { id: 2, name: 'James Chen', role: 'Designer' },
         { id: 3, name: 'Sofia Rodriguez', role: 'Manager' }
@@ -357,7 +374,7 @@ function UserList() {
     };
 
     fetchUsers();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   if (loading) {
     return <div className="loading">Loading users...</div>;

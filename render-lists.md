@@ -40,9 +40,11 @@ helping you master this essential React feature.
 The simplest form of list rendering transforms an array of strings into  
 elements.  
 
-```jsx
-function FruitList() {
-  const fruits = ["Apple", "Banana", "Orange", "Mango", "Pineapple"];
+```tsx
+import React from 'react';
+
+function FruitList(): JSX.Element {
+  const fruits: string[] = ["Apple", "Banana", "Orange", "Mango", "Pineapple"];
   
   return (
     <ul>
@@ -70,9 +72,11 @@ removed, or reordered.
 Numerical arrays can be rendered just like strings, useful for displaying  
 data like scores or measurements.  
 
-```jsx
-function ScoreList() {
-  const scores = [95, 87, 92, 88, 91, 85, 90];
+```tsx
+import React from 'react';
+
+function ScoreList(): JSX.Element {
+  const scores: number[] = [95, 87, 92, 88, 91, 85, 90];
   
   return (
     <div>
@@ -102,9 +106,18 @@ index as a key is acceptable since the list order won't change.
 Real applications typically work with arrays of objects containing multiple  
 properties that need to be displayed.  
 
-```jsx
-function UserList() {
-  const users = [
+```tsx
+import React from 'react';
+
+type User = {
+  id: number;
+  name: string;
+  age: number;
+  role: string;
+};
+
+function UserList(): JSX.Element {
+  const users: User[] = [
     { id: 1, name: "Alice Johnson", age: 28, role: "Developer" },
     { id: 2, name: "Bob Smith", age: 34, role: "Designer" },
     { id: 3, name: "Carol Williams", age: 31, role: "Manager" },
@@ -141,9 +154,17 @@ demonstrating how to structure repeated UI elements from data.
 Always prefer unique identifiers over array indices for keys in dynamic  
 lists.  
 
-```jsx
-function TaskList() {
-  const tasks = [
+```tsx
+import React from 'react';
+
+type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+};
+
+function TaskList(): JSX.Element {
+  const tasks: Task[] = [
     { id: "task-1", title: "Review pull requests", completed: false },
     { id: "task-2", title: "Update documentation", completed: true },
     { id: "task-3", title: "Fix bug in login", completed: false },
@@ -179,17 +200,22 @@ demonstrating how to combine list rendering with dynamic styles.
 Keys help React's reconciliation algorithm efficiently update the DOM by  
 identifying which items changed.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function DynamicList() {
-  const [items, setItems] = useState([
+type Item = {
+  id: number;
+  text: string;
+};
+
+function DynamicList(): JSX.Element {
+  const [items, setItems] = useState<Item[]>([
     { id: 1, text: "First item" },
     { id: 2, text: "Second item" },
     { id: 3, text: "Third item" }
   ]);
   
-  const shuffleItems = () => {
+  const shuffleItems = (): void => {
     const shuffled = [...items].sort(() => Math.random() - 0.5);
     setItems(shuffled);
   };
@@ -222,17 +248,17 @@ causing performance issues.
 
 Using array indices as keys can cause bugs when the list changes.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ProblematicIndexKeys() {
-  const [items, setItems] = useState([
+function ProblematicIndexKeys(): JSX.Element {
+  const [items, setItems] = useState<string[]>([
     "Item A",
     "Item B", 
     "Item C"
   ]);
   
-  const removeFirst = () => {
+  const removeFirst = (): void => {
     setItems(items.slice(1));
   };
   
@@ -269,8 +295,21 @@ identifiers for keys in lists that can change.
 For complex list items, extract them into separate components for better  
 organization and reusability.  
 
-```jsx
-function ProductCard({ product }) {
+```tsx
+import React from 'react';
+
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+};
+
+type ProductCardProps = {
+  product: Product;
+};
+
+function ProductCard({ product }: ProductCardProps): JSX.Element {
   return (
     <div className="product-card">
       <h3>{product.name}</h3>
@@ -281,8 +320,8 @@ function ProductCard({ product }) {
   );
 }
 
-function ProductList() {
-  const products = [
+function ProductList(): JSX.Element {
+  const products: Product[] = [
     { id: 101, name: "Laptop", price: 999.99, description: "High-performance laptop" },
     { id: 102, name: "Mouse", price: 29.99, description: "Wireless mouse" },
     { id: 103, name: "Keyboard", price: 79.99, description: "Mechanical keyboard" }
@@ -314,9 +353,22 @@ own rendering logic.
 Lists can contain other lists, creating hierarchical structures like menus  
 or category trees.  
 
-```jsx
-function CategoryList() {
-  const categories = [
+```tsx
+import React from 'react';
+
+type Item = {
+  id: number;
+  name: string;
+};
+
+type Category = {
+  id: number;
+  name: string;
+  items: Item[];
+};
+
+function CategoryList(): JSX.Element {
+  const categories: Category[] = [
     {
       id: 1,
       name: "Electronics",
@@ -366,9 +418,17 @@ organizational charts, and hierarchical data structures.
 
 Combine array filtering with mapping to show only relevant items.  
 
-```jsx
-function FilteredTaskList() {
-  const tasks = [
+```tsx
+import React from 'react';
+
+type Task = {
+  id: number;
+  title: string;
+  status: 'active' | 'completed';
+};
+
+function FilteredTaskList(): JSX.Element {
+  const tasks: Task[] = [
     { id: 1, title: "Complete project", status: "active" },
     { id: 2, title: "Review code", status: "completed" },
     { id: 3, title: "Write tests", status: "active" },
@@ -408,9 +468,17 @@ data transformation logic from rendering logic.
 
 Sort arrays to control the display order of list items.  
 
-```jsx
-function SortedStudentList() {
-  const students = [
+```tsx
+import React from 'react';
+
+type Student = {
+  id: number;
+  name: string;
+  grade: number;
+};
+
+function SortedStudentList(): JSX.Element {
+  const students: Student[] = [
     { id: 1, name: "Zoe Taylor", grade: 88 },
     { id: 2, name: "Alice Johnson", grade: 95 },
     { id: 3, name: "Mike Brown", grade: 91 },
@@ -449,18 +517,23 @@ its position.
 
 Interactive lists where items can be added or removed using React state.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function TodoList() {
-  const [todos, setTodos] = useState([
+type Todo = {
+  id: number;
+  text: string;
+};
+
+function TodoList(): JSX.Element {
+  const [todos, setTodos] = useState<Todo[]>([
     { id: 1, text: "Learn React" },
     { id: 2, text: "Build a project" }
   ]);
-  const [nextId, setNextId] = useState(3);
-  const [inputValue, setInputValue] = useState("");
+  const [nextId, setNextId] = useState<number>(3);
+  const [inputValue, setInputValue] = useState<string>("");
   
-  const addTodo = () => {
+  const addTodo = (): void => {
     if (inputValue.trim()) {
       setTodos([...todos, { id: nextId, text: inputValue }]);
       setNextId(nextId + 1);
@@ -468,7 +541,7 @@ function TodoList() {
     }
   };
   
-  const removeTodo = (id) => {
+  const removeTodo = (id: number): void => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
   
@@ -476,7 +549,7 @@ function TodoList() {
     <div>
       <input
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
         placeholder="Enter a todo"
       />
       <button onClick={addTodo}>Add</button>
@@ -509,16 +582,27 @@ tracks items as they're added and removed.
 Apply different rendering logic to individual list items based on their  
 properties.  
 
-```jsx
-function StatusList() {
-  const items = [
+```tsx
+import React from 'react';
+
+type Status = 'online' | 'offline' | 'maintenance';
+
+type Item = {
+  id: number;
+  name: string;
+  status: Status;
+  uptime: number;
+};
+
+function StatusList(): JSX.Element {
+  const items: Item[] = [
     { id: 1, name: "Server A", status: "online", uptime: 99.9 },
     { id: 2, name: "Server B", status: "offline", uptime: 0 },
     { id: 3, name: "Server C", status: "maintenance", uptime: 85.5 },
     { id: 4, name: "Server D", status: "online", uptime: 100 }
   ];
   
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: Status): string => {
     switch(status) {
       case "online": return "green";
       case "offline": return "red";
@@ -558,8 +642,20 @@ different visual treatments based on their state.
 
 Provide helpful feedback when lists are empty instead of showing nothing.  
 
-```jsx
-function MessageList({ messages }) {
+```tsx
+import React from 'react';
+
+type Message = {
+  id: number;
+  sender: string;
+  text: string;
+};
+
+type MessageListProps = {
+  messages: Message[];
+};
+
+function MessageList({ messages }: MessageListProps): JSX.Element {
   if (messages.length === 0) {
     return (
       <div className="empty-state">
@@ -583,8 +679,8 @@ function MessageList({ messages }) {
   );
 }
 
-function MessageApp() {
-  const messages = [];
+function MessageApp(): JSX.Element {
+  const messages: Message[] = [];
   
   return <MessageList messages={messages} />;
 }
@@ -605,21 +701,27 @@ essential for good UX in applications with dynamic data.
 List items often need multiple interactive elements like edit and delete  
 buttons.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ContactList() {
-  const [contacts, setContacts] = useState([
+type Contact = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+function ContactList(): JSX.Element {
+  const [contacts, setContacts] = useState<Contact[]>([
     { id: 1, name: "Alice Johnson", email: "alice@example.com" },
     { id: 2, name: "Bob Smith", email: "bob@example.com" },
     { id: 3, name: "Carol White", email: "carol@example.com" }
   ]);
   
-  const deleteContact = (id) => {
+  const deleteContact = (id: number): void => {
     setContacts(contacts.filter(contact => contact.id !== id));
   };
   
-  const sendEmail = (email) => {
+  const sendEmail = (email: string): void => {
     console.log(`Sending email to ${email}`);
   };
   
@@ -652,10 +754,19 @@ delete operations.
 Simulating real-world scenarios where data comes from APIs or external  
 sources.  
 
-```jsx
-function BookList() {
-  // Simulated data from an API response
-  const booksData = [
+```tsx
+import React from 'react';
+
+type Book = {
+  id: string;
+  title: string;
+  author: string;
+  year: number;
+  rating: number;
+};
+
+function BookList(): JSX.Element {
+  const booksData: Book[] = [
     {
       id: "isbn-001",
       title: "React Fundamentals",
@@ -712,20 +823,25 @@ fetch call or state management system.
 
 Track which items are selected using state for multi-select functionality.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function SelectableList() {
-  const items = [
+type Item = {
+  id: number;
+  name: string;
+};
+
+function SelectableList(): JSX.Element {
+  const items: Item[] = [
     { id: 1, name: "Item One" },
     { id: 2, name: "Item Two" },
     { id: 3, name: "Item Three" },
     { id: 4, name: "Item Four" }
   ];
   
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   
-  const toggleSelection = (id) => {
+  const toggleSelection = (id: number): void => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
     } else {
@@ -769,17 +885,23 @@ multiple items.
 
 Display large lists in pages to improve performance and user experience.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function PaginatedList() {
-  const allItems = Array.from({ length: 50 }, (_, i) => ({
+type Item = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+function PaginatedList(): JSX.Element {
+  const allItems: Item[] = Array.from({ length: 50 }, (_, i) => ({
     id: i + 1,
     title: `Item ${i + 1}`,
     description: `Description for item ${i + 1}`
   }));
   
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
   
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -831,13 +953,19 @@ improves scrolling performance for large lists.
 
 Implement real-time search filtering for lists based on user input.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState, ChangeEvent } from 'react';
 
-function SearchableList() {
-  const [searchTerm, setSearchTerm] = useState("");
+type Person = {
+  id: number;
+  name: string;
+  department: string;
+};
+
+function SearchableList(): JSX.Element {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   
-  const people = [
+  const people: Person[] = [
     { id: 1, name: "Alice Johnson", department: "Engineering" },
     { id: 2, name: "Bob Smith", department: "Marketing" },
     { id: 3, name: "Carol Williams", department: "Engineering" },
@@ -856,7 +984,7 @@ function SearchableList() {
         type="text"
         placeholder="Search by name or department..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
       />
       <p>Found {filteredPeople.length} results</p>
       <ul>
@@ -887,11 +1015,22 @@ search interfaces.
 Individual list items can maintain their own expanded/collapsed state for  
 detailed views.  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ExpandableItem({ item }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+type Item = {
+  id: number;
+  title: string;
+  details: string;
+  category: string;
+};
+
+type ExpandableItemProps = {
+  item: Item;
+};
+
+function ExpandableItem({ item }: ExpandableItemProps): JSX.Element {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   
   return (
     <li>
@@ -908,8 +1047,8 @@ function ExpandableItem({ item }) {
   );
 }
 
-function ExpandableList() {
-  const items = [
+function ExpandableList(): JSX.Element {
+  const items: Item[] = [
     { id: 1, title: "React Basics", details: "Learn core React concepts", category: "Tutorial" },
     { id: 2, title: "State Management", details: "Managing app state", category: "Advanced" },
     { id: 3, title: "Hooks Guide", details: "Using React Hooks", category: "Tutorial" }
@@ -940,18 +1079,24 @@ for FAQs, file explorers, and any interface with collapsible sections.
 Advanced list manipulation with visual reordering (conceptual example showing  
 data structure).  
 
-```jsx
-import { useState } from 'react';
+```tsx
+import React, { useState } from 'react';
 
-function ReorderableList() {
-  const [items, setItems] = useState([
+type Item = {
+  id: number;
+  text: string;
+  order: number;
+};
+
+function ReorderableList(): JSX.Element {
+  const [items, setItems] = useState<Item[]>([
     { id: 1, text: "First priority", order: 1 },
     { id: 2, text: "Second priority", order: 2 },
     { id: 3, text: "Third priority", order: 3 },
     { id: 4, text: "Fourth priority", order: 4 }
   ]);
   
-  const moveUp = (id) => {
+  const moveUp = (id: number): void => {
     const index = items.findIndex(item => item.id === id);
     if (index > 0) {
       const newItems = [...items];
@@ -960,7 +1105,7 @@ function ReorderableList() {
     }
   };
   
-  const moveDown = (id) => {
+  const moveDown = (id: number): void => {
     const index = items.findIndex(item => item.id === id);
     if (index < items.length - 1) {
       const newItems = [...items];
