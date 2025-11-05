@@ -42,6 +42,47 @@ TypeScript and React 19.2 features.
 
 ---
 
+## Passing Form Data Directly
+
+React allows you to handle form submissions by passing a function directly
+to the `action` prop of a `<form>` element. This simplifies form handling
+for basic cases by removing the need for `useState` or `event.preventDefault()`.
+
+```tsx
+import type { JSX } from "react";
+
+export function MyForm(): JSX.Element {
+  function handleSubmit(formData: FormData) {
+    // Handle form submission logic here
+    const name = formData.get("name") as string;
+    alert(`Form submitted with name: ${name}`);
+    console.log("Form submitted with name:", name);
+  }
+
+  return (
+    <>
+      <style>{`form { color: darkgray; }`}</style>
+      <form action={handleSubmit}>
+        <label>
+          Name:
+          <input type="text" name="name" style={{ margin: "1em" }} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    </>
+  );
+}
+
+export default MyForm;
+```
+
+In this example, the `handleSubmit` function receives `FormData` directly,
+which can be used to access the form fields by their `name` attribute. This
+approach is clean and aligns with modern React patterns for handling forms
+without manual state management.
+
+---
+
 ## Basic Controlled Input
 
 Controlled components are the recommended pattern for form inputs in React.  
@@ -1899,6 +1940,324 @@ to avoid invalid combinations. Use a mapping object to store options for
 each parent value. This pattern is common in location selection (country →  
 state → city), category filtering, and hierarchical data. Clear dependent  
 fields when the parent changes to maintain data consistency.  
+
+---
+
+## Form with Complex Validation Schema
+
+For complex forms, using a schema-based validation library like Zod or Yup
+can simplify validation logic and make it more declarative.
+
+```tsx
+import React, { useState, FormEvent } from 'react';
+
+// Mock schema validation - in a real app, you'd use a library like Zod
+const schema = {
+  profile: {
+    name: (val: string) => val.length > 0,
+    email: (val: string) => /\S+@\S+\.\S+/.test(val),
+  },
+  preferences: {
+    newsletter: (val: boolean) => typeof val === 'boolean',
+  },
+};
+
+type FormData = {
+  profile: { name: string; email: string };
+  preferences: { newsletter: boolean };
+};
+
+function SchemaValidationForm(): JSX.Element {
+  const [formData, setFormData] = useState<FormData>({
+    profile: { name: '', email: '' },
+    preferences: { newsletter: false },
+  });
+  const [errors, setErrors] = useState<any>({});
+
+  const validate = (): boolean => {
+    const newErrors: any = { profile: {}, preferences: {} };
+    if (!schema.profile.name(formData.profile.name)) {
+      newErrors.profile.name = 'Name is required';
+    }
+    if (!schema.profile.email(formData.profile.email)) {
+      newErrors.profile.email = 'Invalid email address';
+    }
+    if (!schema.preferences.newsletter(formData.preferences.newsletter)) {
+      newErrors.preferences.newsletter = 'Invalid selection';
+    }
+
+    setErrors(newErrors);
+    return !newErrors.profile.name && !newErrors.profile.email && !newErrors.preferences.newsletter;
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (validate()) {
+      console.log('Form submitted:', formData);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <input
+          type="text"
+          placeholder="Name"
+          value={formData.profile.name}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              profile: { ...formData.profile, name: e.target.value },
+            })
+          }
+        />
+        {errors.profile?.name && <p style={{ color: 'red' }}>{errors.profile.name}</p>}
+      </div>
+      <div>
+        <input
+          type="email"
+          placeholder="Email"
+          value={formData.profile.email}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              profile: { ...formData.profile, email: e.target.value },
+            })
+          }
+        />
+        {errors.profile?.email && <p style={{ color: 'red' }}>{errors.profile.email}</p>}
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={formData.preferences.newsletter}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                preferences: { newsletter: e.target.checked },
+              })
+            }
+          />
+          Subscribe to newsletter
+        </label>
+        {errors.preferences?.newsletter && <p style={{ color: 'red' }}>{errors.preferences.newsletter}</p>}
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+Schema-based validation centralizes validation logic, making it easier to
+manage for complex, nested data structures.
+
+---
+
+## Form State with useReducer
+
+For forms with complex state transitions, `useReducer` can be a more robust
+alternative to `useState`.
+
+```tsx
+import React, { useReducer, FormEvent } from 'react';
+
+type State = { count: number; text: string };
+type Action = { type: 'increment' } | { type: 'decrement' } | { type: 'setText'; payload: string };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'increment': return { ...state, count: state.count + 1 };
+    case 'decrement': return { ...state, count: state.count - 1 };
+    case 'setText': return { ...state, text: action.payload };
+    default: throw new Error();
+  }
+};
+
+function ReducerForm(): JSX.Element {
+  const [state, dispatch] = useReducer(reducer, { count: 0, text: '' });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    console.log('Form state:', state);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={state.text} onChange={e => dispatch({ type: 'setText', payload: e.target.value })} />
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <span>{state.count}</span>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+`useReducer` is ideal when the next state depends on the previous one, or
+when multiple sub-values are involved in the state logic.
+
+---
+
+## Wizard Form with Local Storage Persistence
+
+For long, multi-step forms, persisting the state to local storage can
+prevent data loss and improve user experience.
+
+```tsx
+import React, { useState, useEffect, FormEvent } from 'react';
+
+function PersistentWizardForm(): JSX.Element {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('wizardFormData');
+    return saved ? JSON.parse(saved) : { step1: '', step2: '' };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('wizardFormData', JSON.stringify(formData));
+  }, [formData]);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    console.log('Wizard complete:', formData);
+    localStorage.removeItem('wizardFormData');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {step === 1 && (
+        <div>
+          <h3>Step 1</h3>
+          <input
+            type="text"
+            placeholder="Step 1 Data"
+            value={formData.step1}
+            onChange={(e) => setFormData({ ...formData, step1: e.target.value })}
+          />
+          <button onClick={() => setStep(2)}>Next</button>
+        </div>
+      )}
+      {step === 2 && (
+        <div>
+          <h3>Step 2</h3>
+          <input
+            type="text"
+            placeholder="Step 2 Data"
+            value={formData.step2}
+            onChange={(e) => setFormData({ ...formData, step2: e.target.value })}
+          />
+          <button onClick={() => setStep(1)}>Back</button>
+          <button type="submit">Submit</button>
+        </div>
+      )}
+    </form>
+  );
+}
+```
+
+This pattern ensures that users can close the browser and return to the
+form without losing their progress.
+
+---
+
+## Form with Drag-and-Drop File Upload
+
+A more advanced file upload that supports drag-and-drop for a better user
+experience.
+
+```tsx
+import React, { useState, DragEvent } from 'react';
+
+function DragDropUpload(): JSX.Element {
+  const [files, setFiles] = useState<File[]>([]);
+
+  const handleDrop = (event: DragEvent<HTMLDivElement>): void => {
+    event.preventDefault();
+    const droppedFiles = Array.from(event.dataTransfer.files);
+    setFiles(prev => [...prev, ...droppedFiles]);
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>): void => {
+    event.preventDefault();
+  };
+
+  return (
+    <div onDrop={handleDrop} onDragOver={handleDragOver} style={{ border: '2px dashed #ccc', padding: '20px' }}>
+      <p>Drag and drop files here</p>
+      <ul>{files.map(file => <li key={file.name}>{file.name}</li>)}</ul>
+    </div>
+  );
+}
+```
+
+This component uses the HTML Drag and Drop API to create an interactive
+file upload area.
+
+---
+
+## Dynamic List with Validation
+
+A form that allows users to add a list of items, with validation for each
+item in the list.
+
+```tsx
+import React, { useState, FormEvent } from 'react';
+
+type Item = { id: number; value: string };
+type Errors = { [key: number]: string };
+
+function ValidatedDynamicList(): JSX.Element {
+  const [items, setItems] = useState<Item[]>([{ id: 1, value: '' }]);
+  const [errors, setErrors] = useState<Errors>({});
+
+  const validate = (): boolean => {
+    const newErrors: Errors = {};
+    items.forEach(item => {
+      if (item.value.length < 3) {
+        newErrors[item.id] = 'Must be at least 3 characters';
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (validate()) {
+      console.log('Submitted items:', items);
+    }
+  };
+
+  const handleAddItem = () => {
+    setItems([...items, { id: Date.now(), value: '' }]);
+  };
+
+  const handleItemChange = (id: number, value: string) => {
+    setItems(items.map(item => (item.id === id ? { ...item, value } : item)));
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {items.map(item => (
+        <div key={item.id}>
+          <input
+            type="text"
+            value={item.value}
+            onChange={(e) => handleItemChange(item.id, e.target.value)}
+          />
+          {errors[item.id] && <p style={{ color: 'red' }}>{errors[item.id]}</p>}
+        </div>
+      ))}
+      <button type="button" onClick={handleAddItem}>Add Item</button>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+This pattern is useful for forms where users need to input a variable number
+of items, such as adding multiple phone numbers or addresses.
 
 ---
 
