@@ -45,9 +45,9 @@ React feature.
 Creating a simple JSX element is the foundation of React development.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
-function BasicElement(): JSX.Element {
+export default function BasicElement(): JSX.Element {
   return <div>Hello there!</div>;
 }
 ```
@@ -65,19 +65,19 @@ returned directly without quotes, distinguishing JSX from strings.
 JSX allows you to embed JavaScript expressions using curly braces.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
-function ExpressionExample(): JSX.Element {
-  const name: string = "React Developer";
-  const age: number = 25;
-  
-  return (
-    <div>
-      <p>Name: {name}</p>
-      <p>Age: {age}</p>
-      <p>Next year: {age + 1}</p>
-    </div>
-  );
+export default function Expressions(): JSX.Element {
+	const name: string = "React Developer";
+	const age: number = 25;
+
+	return (
+		<div>
+			<p>Name: {name}</p>
+			<p>Age: {age}</p>
+			<p>Next year: {age + 1}</p>
+		</div>
+	);
 }
 ```
 
@@ -95,9 +95,9 @@ interfaces.
 JSX elements can have attributes similar to HTML, but with some differences.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
-function AttributeExample(): JSX.Element {
+export default function AttributeExample(): JSX.Element {
   const imageUrl: string = "https://via.placeholder.com/150";
   const altText: string = "Placeholder image";
   
@@ -126,7 +126,7 @@ expression attributes (`src`, `alt`).
 When returning multiple elements, use React Fragments to avoid extra DOM nodes.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function FragmentExample(): JSX.Element {
   return (
@@ -153,7 +153,7 @@ working with CSS Grid and Flexbox layouts.
 JSX supports conditional rendering using JavaScript's ternary operator.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function ConditionalExample(): JSX.Element {
   const isLoggedIn: boolean = true;
@@ -184,7 +184,7 @@ multi-line content.
 Use the logical AND operator for simpler conditional rendering.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function LogicalAndExample(): JSX.Element {
   const hasNotifications: boolean = true;
@@ -215,7 +215,7 @@ conversions when necessary.
 Transform arrays into lists of JSX elements using the map() method.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function ArrayMapExample(): JSX.Element {
   const fruits: string[] = ["Apple", "Banana", "Orange", "Mango"];
@@ -244,7 +244,7 @@ prevents subtle bugs when lists are modified.
 Render data from arrays of objects with multiple properties.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type User = {
   id: number;
@@ -383,7 +383,7 @@ static styles and better performance.
 Use className to apply CSS classes to JSX elements.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function ClassNameExample(): JSX.Element {
   const isActive: boolean = true;
@@ -413,7 +413,7 @@ management.
 Compose components by nesting them within each other.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type AvatarProps = {
   name: string;
@@ -503,7 +503,7 @@ content. Children can be text, elements, components, or any valid JSX.
 Combine conditional logic with list rendering for dynamic UIs.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type Task = {
   id: number;
@@ -550,7 +550,7 @@ common in real applications for displaying filtered or search results.
 Add comments within JSX using JavaScript comment syntax.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function CommentsExample(): JSX.Element {
   return (
@@ -588,7 +588,7 @@ development.
 Use the spread operator to pass multiple props efficiently.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type UserInfoProps = {
   name: string;
@@ -679,7 +679,7 @@ custom functionality.
 Handle boolean attributes with shorthand syntax.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function BooleanAttributeExample(): JSX.Element {
   const isRequired: boolean = true;
@@ -718,7 +718,7 @@ including static true values, expressions, and conditional logic.
 Use explicit Fragment syntax when you need to add keys to fragments.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 type GlossaryItem = {
   id: number;
@@ -759,7 +759,7 @@ multiple sibling elements per array item without wrapper divs.
 Understand how JSX handles null, undefined, and other falsy values.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function NullRenderingExample(): JSX.Element {
   const nullValue = null;
@@ -1000,7 +1000,7 @@ real-time character count feedback, a common UX pattern for text inputs.
 Render raw HTML content with proper sanitization awareness.  
 
 ```tsx
-import React from 'react';
+import type { JSX } from "react";
 
 function DangerouslySetInnerHTMLExample(): JSX.Element {
   const htmlContent = {
