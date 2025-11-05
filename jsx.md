@@ -248,7 +248,7 @@ type User = {
   role: string;
 };
 
-function ComplexObjectExample(): JSX.Element {
+export default function ComplexObjectExample(): JSX.Element {
   const users: User[] = [
     { id: 1, name: "Alice Johnson", role: "Developer" },
     { id: 2, name: "Bob Smith", role: "Designer" },
