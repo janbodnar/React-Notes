@@ -230,11 +230,6 @@ value's type before attempting to access file properties like `name` or `size`. 
 `FormData` to a server, the server-side framework will automatically recognize and process the binary  
 file data included within the payload.
 
------
-
-Would you like to see how to integrate this form handling with **React Router** actions, or perhaps how to handle **form errors**?
-
-
 
 ## Basic Controlled Input
 
