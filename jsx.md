@@ -212,16 +212,17 @@ Transform arrays into lists of JSX elements using the map() method.
 ```tsx
 import type { JSX } from "react";
 
-function ArrayMapExample(): JSX.Element {
-  const fruits: string[] = ["Apple", "Banana", "Orange", "Mango"];
-  
-  return (
-    <ul>
-      {fruits.map((fruit, index) => (
-        <li key={index}>{fruit}</li>
-      ))}
-    </ul>
-  );
+export default function ArrayMap(): JSX.Element {
+	const fruits: string[] = ["Apple", "Banana", "Orange", "Mango"];
+
+	return (
+		<ul>
+			{fruits.map((fruit, index) => (
+				// biome-ignore lint/suspicious/noArrayIndexKey: <testing>
+				<li key={index}>{fruit}</li>
+			))}
+		</ul>
+	);
 }
 ```
 
