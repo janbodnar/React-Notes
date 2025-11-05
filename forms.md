@@ -237,35 +237,35 @@ Controlled components are the recommended pattern for form inputs in React.
 The input value is controlled by state and updated via onChange handlers.  
 
 ```tsx
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { type ChangeEvent, type FormEvent, type JSX, useState } from "react";
 
 function BasicControlledInput(): JSX.Element {
-  const [name, setName] = useState<string>("");
-  const [submittedName, setSubmittedName] = useState<string>("");
+	const [name, setName] = useState<string>("");
+	const [submittedName, setSubmittedName] = useState<string>("");
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setName(event.target.value);
-  };
+	const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+		setName(event.target.value);
+	};
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-    setSubmittedName(name);
-  };
+	const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+		event.preventDefault();
+		setSubmittedName(name);
+	};
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={name}
-          onChange={handleChange}
-          placeholder="Enter your name"
-        />
-        <button type="submit">Submit</button>
-      </form>
-      {submittedName && <p>Hello there, {submittedName}!</p>}
-    </div>
-  );
+	return (
+		<div>
+			<form onSubmit={handleSubmit}>
+				<input
+					type="text"
+					value={name}
+					onChange={handleChange}
+					placeholder="Enter your name"
+				/>
+				<button type="submit">Submit</button>
+			</form>
+			{submittedName && <p>Hello there, {submittedName}!</p>}
+		</div>
+	);
 }
 
 export default BasicControlledInput;
