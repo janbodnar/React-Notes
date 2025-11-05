@@ -83,7 +83,7 @@ without manual state management.
 ## Handling Multiple Inputs
 
 This example shows how to retrieve **multiple fields** from the `FormData` object,  
-including a text input and a checkbox, demonstrating how to handle different data 
+including a text input and a checkbox, demonstrating how to handle different data  
 types and multiple field values simultaneously.
 
 ```tsx
@@ -132,8 +132,8 @@ checkboxes are usually omitted from the `FormData` object entirely.
 ## Submitting with `formData.entries()`
 
 This example demonstrates using the `entries()` method of `FormData` to iterate  
-over all fields. This is helpful when you want to convert the form data into 
-a standard JavaScript object for easier processing or sending to an API.
+over all fields. This is helpful when you want to convert the form data into  
+a standard JavaScript object for easier processing or sending to an API.  
 
 ```tsx
 import type { JSX } from "react";
