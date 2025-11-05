@@ -40,13 +40,11 @@ multi-step forms. Each section includes practical examples demonstrating
 best practices for handling forms in modern React applications using  
 TypeScript and React 19.2 features.  
 
----
-
 ## Passing Form Data Directly
 
-React allows you to handle form submissions by passing a function directly
-to the `action` prop of a `<form>` element. This simplifies form handling
-for basic cases by removing the need for `useState` or `event.preventDefault()`.
+React allows you to handle form submissions by passing a function directly to the `action`  
+prop of a `<form>` element. This simplifies form handling for basic cases by removing the 
+need for `useState` or `event.preventDefault()`.
 
 ```tsx
 import type { JSX } from "react";
@@ -76,12 +74,167 @@ export function MyForm(): JSX.Element {
 export default MyForm;
 ```
 
-In this example, the `handleSubmit` function receives `FormData` directly,
-which can be used to access the form fields by their `name` attribute. This
-approach is clean and aligns with modern React patterns for handling forms
+In this example, the `handleSubmit` function receives `FormData` directly,  
+which can be used to access the form fields by their `name` attribute. This  
+approach is clean and aligns with modern React patterns for handling forms  
 without manual state management.
 
----
+
+## Handling Multiple Inputs
+
+This example shows how to retrieve **multiple fields** from the `FormData` object,  
+including a text input and a checkbox, demonstrating how to handle different data 
+types and multiple field values simultaneously.
+
+```tsx
+import type { JSX } from "react";
+
+export function MultiInputForm(): JSX.Element {
+  function handleMultiSubmit(formData: FormData) {
+    const email = formData.get("email") as string;
+    // Checkboxes often only appear in FormData if checked
+    const subscribe = formData.has("subscribe"); 
+    
+    console.log("Email:", email);
+    console.log("Subscribed:", subscribe);
+    
+    alert(`Submission:\nEmail: ${email}\nSubscribed: ${subscribe ? 'Yes' : 'No'}`);
+  }
+
+  return (
+    <>
+      <style>{`form { color: darkgreen; border: 1px solid darkgreen; padding: 10px; margin-top: 10px; }`}</style>
+      <h3>Multi-Input Form</h3>
+      <form action={handleMultiSubmit}>
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          Email:
+          <input type="email" name="email" required style={{ margin: "0 1em" }} />
+        </label>
+        
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          <input type="checkbox" name="subscribe" /> 
+          Subscribe to newsletter
+        </label>
+        
+        <input type="submit" value="Sign Up" />
+      </form>
+    </>
+  );
+}
+```
+
+In this second example, the `handleMultiSubmit` function efficiently gathers values for  
+both the `email` text field and the `subscribe` checkbox. For the checkbox, using  
+`formData.has('subscribe')` is an idiomatic way to check if it was checked, as unchecked  
+checkboxes are usually omitted from the `FormData` object entirely.
+
+
+## Submitting with `formData.entries()`
+
+This example demonstrates using the `entries()` method of `FormData` to iterate  
+over all fields. This is helpful when you want to convert the form data into 
+a standard JavaScript object for easier processing or sending to an API.
+
+```tsx
+import type { JSX } from "react";
+
+export function DataIterationForm(): JSX.Element {
+  function handleIterationSubmit(formData: FormData) {
+    const data: { [key: string]: FormDataEntryValue } = {};
+    
+    // Iterate over all key-value pairs
+    for (const [key, value] of formData.entries()) {
+      data[key] = value;
+    }
+
+    console.log("Serialized Data:", data);
+    alert(`Form Data Object: ${JSON.stringify(data, null, 2)}`);
+  }
+
+  return (
+    <>
+      <style>{`form { color: darkblue; border: 1px solid darkblue; padding: 10px; margin-top: 10px; }`}</style>
+      <h3>Data Iteration Form</h3>
+      <form action={handleIterationSubmit}>
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          Item:
+          <input type="text" name="item" required style={{ margin: "0 1em" }} />
+        </label>
+        
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          Quantity:
+          <input type="number" name="quantity" required style={{ margin: "0 1em" }} />
+        </label>
+        
+        <input type="submit" value="Process Order" />
+      </form>
+    </>
+  );
+}
+```
+
+This example uses `formData.entries()` to loop through every field/value pair submitted  
+by the form. This pattern is commonly used to serialize the `FormData` into a standard,  
+iterable JavaScript object (`data`), which is convenient for debugging, complex data  
+manipulation, or preparing the data payload for an external API request.
+
+
+## Handling File Uploads
+
+This example demonstrates how to correctly handle a file input using `FormData`.  
+When a file is selected, the corresponding value in `FormData` is a `File` object,  
+not a simple string.
+
+```tsx
+import type { JSX } from "react";
+
+export function FileUploadForm(): JSX.Element {
+  function handleFileUpload(formData: FormData) {
+    const description = formData.get("description") as string;
+    const file = formData.get("document");
+    
+    console.log("Description:", description);
+    
+    if (file instanceof File) {
+      alert(`File uploaded:\nName: ${file.name}\nSize: ${file.size} bytes\nType: ${file.type}`);
+    } else {
+      alert("No file selected.");
+    }
+  }
+
+  return (
+    <>
+      <style>{`form { color: darkred; border: 1px solid darkred; padding: 10px; margin-top: 10px; }`}</style>
+      <h3>File Upload Form</h3>
+      <form action={handleFileUpload}>
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          Description:
+          <input type="text" name="description" style={{ margin: "0 1em" }} />
+        </label>
+        
+        <label style={{ display: "block", marginBottom: "10px" }}>
+          Select Document:
+          <input type="file" name="document" required style={{ margin: "0 1em" }} />
+        </label>
+        
+        <input type="submit" value="Upload" />
+      </form>
+    </>
+  );
+}
+```
+
+In the final example, when handling a file input, accessing the field via `formData.get("document")`  
+retrieves a `File` object if a file was selected. The logic uses `instanceof File` to confirm the  
+value's type before attempting to access file properties like `name` or `size`. When sending this  
+`FormData` to a server, the server-side framework will automatically recognize and process the binary  
+file data included within the payload.
+
+-----
+
+Would you like to see how to integrate this form handling with **React Router** actions, or perhaps how to handle **form errors**?
+
+
 
 ## Basic Controlled Input
 
