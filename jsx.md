@@ -97,18 +97,13 @@ JSX elements can have attributes similar to HTML, but with some differences.
 ```tsx
 import type { JSX } from "react";
 
-export default function AttributeExample(): JSX.Element {
-  const imageUrl: string = "https://via.placeholder.com/150";
-  const altText: string = "Placeholder image";
-  
-  return (
-    <img 
-      src={imageUrl} 
-      alt={altText} 
-      className="profile-image"
-      width="150"
-    />
-  );
+export default function Attribute(): JSX.Element {
+	const imageUrl: string = "https://picsum.photos/150";
+	const altText: string = "Placeholder image";
+
+	return (
+		<img src={imageUrl} alt={altText} className="profile-image" width="150" />
+	);
 }
 ```
 
@@ -128,7 +123,7 @@ When returning multiple elements, use React Fragments to avoid extra DOM nodes.
 ```tsx
 import type { JSX } from "react";
 
-function FragmentExample(): JSX.Element {
+export default function FragmentExample(): JSX.Element {
   return (
     <>
       <h1>Main Title</h1>
@@ -155,7 +150,7 @@ JSX supports conditional rendering using JavaScript's ternary operator.
 ```tsx
 import type { JSX } from "react";
 
-function ConditionalExample(): JSX.Element {
+export default function ConditionalExample(): JSX.Element {
   const isLoggedIn: boolean = true;
   
   return (
